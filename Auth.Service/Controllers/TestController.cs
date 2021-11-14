@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Auth.Service.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/auth/[controller]")]
     public class TestController : ControllerBase
