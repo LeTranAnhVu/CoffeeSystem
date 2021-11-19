@@ -1,11 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Auth.Service.Contracts;
-using Auth.Service.Services;
+using AuthService.Contracts;
+using AuthService.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Auth.Service.Controllers
+namespace AuthService.Controllers
 {
     [ApiController]
     [Route("api/auth")]

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Auth.Service.Helpers;
+using AuthService.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Service.Services
+namespace AuthService.Services
 {
     public class IdentityService : IIdentityService
     {
@@ -32,8 +32,8 @@ namespace Auth.Service.Services
             var password = request.Password;
 
             // Check email exists
-            var exists = await _userManager.Users.AnyAsync(x => x.Email == email, cancellationToken: cancellationToken);
-            if (exists)
+            var exists = await _userManager.FindByEmailAsync(email);
+            if (exists is null)
             {
                 return new AuthResult
                 {

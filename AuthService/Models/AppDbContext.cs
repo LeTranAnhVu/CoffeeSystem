@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Service.Models
+namespace AuthService.Models
 {
     public class AppDbContext : IdentityDbContext
     {

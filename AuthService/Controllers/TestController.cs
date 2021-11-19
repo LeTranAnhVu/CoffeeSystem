@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Auth.Service.Controllers
+namespace AuthService.Controllers
 {
     [Authorize]
     [ApiController]

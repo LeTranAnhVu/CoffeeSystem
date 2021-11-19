@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Auth.Service.Services
+namespace AuthService.Services
 {
     public interface IIdentityService
     {

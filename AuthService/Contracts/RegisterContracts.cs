@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Auth.Service.Contracts
+namespace AuthService.Contracts
 {
     public class RegisterRequestContract
     {

@@ -1,4 +1,4 @@
-namespace Auth.Service.Settings
+namespace AuthService.Settings
 {
     public class JwtSettings
     {

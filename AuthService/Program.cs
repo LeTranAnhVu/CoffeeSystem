@@ -1,10 +1,9 @@
 using System;
 using System.Text;
-using Auth.Service;
-using Auth.Service.Helpers;
-using Auth.Service.Models;
-using Auth.Service.Services;
-using Auth.Service.Settings;
+using AuthService.Helpers;
+using AuthService.Models;
+using AuthService.Services;
+using AuthService.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
