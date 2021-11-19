@@ -39,7 +39,7 @@ namespace ProductService.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductReadDto>> GetProductById(int id, CancellationToken cancellationToken)
         {
             try
@@ -107,7 +107,6 @@ namespace ProductService.Controllers
                 _logger.LogError(e.Message);
                 return NotFound(new NotFoundResult());
             }
-
         }
     }
 }
