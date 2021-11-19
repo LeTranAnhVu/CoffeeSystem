@@ -1,14 +1,10 @@
-using System;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ProductService.AuthLogic
+namespace ApiGateWay.AuthLogic
 {
     public static class AuthServiceScheme
     {
@@ -45,8 +41,8 @@ namespace ProductService.AuthLogic
             // generate AuthenticationTicket from the Identity
             // and current authentication scheme
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), Scheme.Name);
-            // return Task.FromResult(AuthenticateResult.Success(ticket));
-            return await Task.FromResult(AuthenticateResult.Fail("fail"));
+            return await Task.FromResult(AuthenticateResult.Success(ticket));
+            // return await Task.FromResult(AuthenticateResult.Fail("fail"));
         }
     }
 }
