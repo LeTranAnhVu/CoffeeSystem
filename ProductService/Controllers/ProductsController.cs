@@ -16,7 +16,6 @@ using BadRequestResult = ProductService.FailResults.BadRequestResult;
 namespace ProductService.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -31,7 +30,6 @@ namespace ProductService.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductReadDto>>> Get(CancellationToken cancellationToken)
         {

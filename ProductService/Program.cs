@@ -1,16 +1,8 @@
-using System;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using ProductService.AuthLogic;
 using ProductService.Models;
 using ProductService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// AUTHENTICATION
-builder.Services.AddAuthentication(AuthServiceScheme.DefaultName).AddScheme<AuthServiceSchemeOptions, AuthServiceHandler>(AuthServiceScheme.DefaultName,options => { });
 
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>
