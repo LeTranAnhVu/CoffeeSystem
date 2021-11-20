@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductService.Models;
 using ProductService.Repositories;
+using ProductService.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,4 +32,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+PrepDb.PrepPopulation(app, app.Environment.IsProduction());
+
 app.Run();
