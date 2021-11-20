@@ -1,9 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
 using AuthService.Contracts;
 using AuthService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AuthService.Controllers
 {
@@ -13,11 +11,13 @@ namespace AuthService.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly IIdentityService _identityService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthController(ILogger<AuthController> logger, IIdentityService identityService)
+        public AuthController(ILogger<AuthController> logger, IIdentityService identityService, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _identityService = identityService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("register")]
@@ -67,6 +67,15 @@ namespace AuthService.Controllers
             {
                 AccessToken = loginResult.Token
             };
+        }
+
+        [Authorize]
+        [HttpPost("validateToken")]
+        public async Task<ActionResult<AuthResult>> ValidateToken(CancellationToken cancellationToken)
+        {
+            var user = _httpContextAccessor.HttpContext.User;
+            var result = _identityService.ValidateToken(user);
+            return Ok(result);
         }
     }
 }

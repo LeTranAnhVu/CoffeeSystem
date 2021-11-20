@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using AuthService.Contracts;
 using AuthService.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -92,13 +93,36 @@ namespace AuthService.Services
             };
         }
 
+        public AuthResult ValidateToken(ClaimsPrincipal user)
+        {
+            if (user.Identity?.IsAuthenticated != true)
+            {
+               return new AuthResult
+               {
+                   Errors = new List<string> {"Invalid credentials"},
+                   Succeeded = false
+               };
+            }
+
+            var email = user.FindFirst(ClaimTypes.Email)?.Value;
+            var username = user.FindFirst(ClaimTypes.Name)?.Value;
+            return new AuthResult
+            {
+                Succeeded = true,
+                User = new UserReadContract
+                {
+                    Email = email,
+                    Username = username
+                }
+            };
+        }
+
         public IEnumerable<Claim> CreateUserClaims(IdentityUser user)
         {
             return new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Email, user.Email),
-                new(JwtRegisteredClaimNames.Sub, user.Email),
-                new(JwtRegisteredClaimNames.Name, user.UserName),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Name, user.UserName),
             };
         }
     }
