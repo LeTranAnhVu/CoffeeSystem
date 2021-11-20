@@ -24,7 +24,7 @@ public class OrderRepository : IOrderRepository
             throw new ArgumentNullException($"Parameter {nameof(productIds)} should contains at least one products");
         }
 
-        order.Status = OrderStatus.Ordered;
+        order.StatusCode = OrderStatusCode.Ordered;
         order.OrderedAt = DateTime.UtcNow;
         await _context.Orders.AddAsync(order, cancellationToken);
 
@@ -46,10 +46,12 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.Orders.Include("OrderedProducts").FirstOrDefaultAsync(o => o.Id == id, cancellationToken: cancellationToken);
+        return await _context.Orders.Include("OrderedProducts")
+            .FirstOrDefaultAsync(o => o.Id == id, cancellationToken: cancellationToken);
     }
 
-    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Order> UpdateStatusOrderAsync(int id, OrderStatusCode statusCode,
+        CancellationToken cancellationToken = default)
     {
         try
         {
@@ -59,13 +61,21 @@ public class OrderRepository : IOrderRepository
                 throw new OrderNotFoundException(id);
             }
 
-            _context.Orders.Remove(order);
+            order.StatusCode = statusCode;
+            _context.Orders.Update(order);
             await _context.SaveChangesAsync(cancellationToken);
+
+            return order;
         }
         catch (Exception e)
         {
-            _logger.LogError($"Cannot delete order in {nameof(DeleteAsync)} : {e.Message}");
+            _logger.LogError($"Cannot update status order with id {id} in {nameof(CancelOrderAsync)} : {e.Message}");
             throw;
         }
+    }
+
+    public async Task<Order> CancelOrderAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await UpdateStatusOrderAsync(id, OrderStatusCode.Cancelled, cancellationToken);
     }
 }

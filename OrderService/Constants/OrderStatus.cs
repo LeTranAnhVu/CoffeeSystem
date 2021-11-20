@@ -2,7 +2,16 @@ namespace OrderService.Constants;
 
 public static class OrderStatus
 {
-    public static readonly string Ordered = "Ordered";
-    public static readonly string Preparing = "Preparing";
-    public static readonly string Ready = "Ready";
+    public const string Ordered = "Ordered";
+    public const string Preparing = "Preparing";
+    public const string Ready = "Ready";
+    public const string Cancelled = "Cancelled";
+}
+
+public enum OrderStatusCode
+{
+    Ordered = 1,
+    Preparing,
+    Ready,
+    Cancelled
 }

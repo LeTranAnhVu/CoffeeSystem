@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using OrderService.Constants;
 using OrderService.Dtos;
 using OrderService.Models;
 using OrderService.Repositories;
@@ -57,13 +58,28 @@ namespace OrderService.Controllers
             return Ok(createdProduct);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        [HttpPatch("{id}/updatestatus/{statusCode}")]
+        public async Task<ActionResult<Order>> UpdateStatus(int id, OrderStatusCode statusCode, CancellationToken cancellationToken)
         {
             try
             {
-                await _orderRepo.DeleteAsync(id, cancellationToken);
-                return NoContent();
+                var updatedOrder = await _orderRepo.UpdateStatusOrderAsync(id, statusCode, cancellationToken);
+                return Ok(updatedOrder);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return NotFound(new NotFoundResult());
+            }
+        }
+
+        [HttpPatch("{id}/cancel")]
+        public async Task<ActionResult<Order>> CancelOrder(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var updatedOrder = await _orderRepo.CancelOrderAsync(id, cancellationToken);
+                return Ok(updatedOrder);
             }
             catch (Exception e)
             {
