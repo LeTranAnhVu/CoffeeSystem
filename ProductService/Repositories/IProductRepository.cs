@@ -8,6 +8,7 @@ namespace ProductService.Repositories
     public interface IProductRepository
     {
         public Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken = default);
+        public Task<IEnumerable<Product>> GetProductsByIds(IReadOnlyList<int> productIds, CancellationToken cancellationToken = default);
         public Task<Product?> GetByIdAsync(int productId, CancellationToken cancellationToken = default);
         public Task<Product> CreateAsync(Product product, CancellationToken cancellationToken = default);
         public Task UpdateOneAsync(Product product, CancellationToken cancellationToken = default);

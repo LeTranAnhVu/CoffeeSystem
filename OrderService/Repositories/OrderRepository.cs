@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Constants;
 using OrderService.Exceptions;
+using OrderService.ExternalModels;
 using OrderService.Models;
+using OrderService.Services.ProductService;
 
 namespace OrderService.Repositories;
 
@@ -9,11 +11,13 @@ public class OrderRepository : IOrderRepository
 {
     private readonly AppDbContext _context;
     private readonly ILogger<OrderRepository> _logger;
+    private readonly IProductService _productService;
 
-    public OrderRepository(AppDbContext context, ILogger<OrderRepository> logger)
+    public OrderRepository(AppDbContext context, ILogger<OrderRepository> logger, IProductService productService)
     {
         _context = context;
         _logger = logger;
+        _productService = productService;
     }
 
     public async Task<Order> CreateAsync(Order order, IReadOnlyList<int> productIds,
@@ -23,6 +27,8 @@ public class OrderRepository : IOrderRepository
         {
             throw new ArgumentNullException($"Parameter {nameof(productIds)} should contains at least one products");
         }
+        // Check Product
+        var products= await ValidateProducts(productIds);
 
         order.StatusCode = OrderStatusCode.Ordered;
         order.OrderedAt = DateTime.UtcNow;
@@ -31,12 +37,27 @@ public class OrderRepository : IOrderRepository
         var orderedProducts = productIds.Select(productId => new OrderedProduct
         {
             OrderId = order.Id,
-            ProductId = productId
+            ProductId = productId,
+            Product = products.FirstOrDefault(p => p.Id == productId)
         });
 
         await _context.OrderedProducts.AddRangeAsync(orderedProducts, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
         return order;
+    }
+
+    private async Task<IReadOnlyList<Product>> ValidateProducts(IReadOnlyList<int> productIds)
+    {
+        var products = await _productService.GetProductsByIds(productIds);
+        var set1 = new HashSet<int>(productIds);
+        var set2 = new HashSet<int>(products.Select(p => p.Id));
+        if (set1.SetEquals(set2))
+        {
+            return products;
+        }
+
+        throw new BadHttpRequestException("Invalid products");
     }
 
     public async Task<IEnumerable<Order>> GetAllAsync(CancellationToken cancellationToken = default)

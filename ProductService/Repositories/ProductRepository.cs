@@ -25,6 +25,16 @@ namespace ProductService.Repositories
             return await _context.Products.ToListAsync(cancellationToken: cancellationToken);
         }
 
+        public async Task<IEnumerable<Product>> GetProductsByIds(IReadOnlyList<int> productIds, CancellationToken cancellationToken = default)
+        {
+            if (!productIds.Any())
+            {
+                return new List<Product>{};
+            }
+
+            return await _context.Products.Where(product => productIds.Contains(product.Id)).ToListAsync(cancellationToken: cancellationToken);
+        }
+
         public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             return await _context.Products.FindAsync(id);

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Models;
 using OrderService.Repositories;
+using OrderService.Services.ProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseInMemoryDatabase("Test");
 });
+
+// Internal Services
+builder.Services.AddHttpClient();
+// Product Service Configuration
+builder.Services.Configure<ProductServiceSettings>(builder.Configuration.GetSection("ProductServiceSettings"));
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // Repository
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
@@ -31,7 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

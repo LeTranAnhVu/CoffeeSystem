@@ -5,6 +5,7 @@ using OrderService.Dtos;
 using OrderService.Models;
 using OrderService.Repositories;
 using NotFoundResult = OrderService.FailResults.NotFoundResult;
+using BadRequestResult = OrderService.FailResults.BadRequestResult;
 namespace OrderService.Controllers
 {
     [Route("api/[controller]")]
@@ -52,10 +53,18 @@ namespace OrderService.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> Create(OrderWriteDto dto, CancellationToken cancellationToken)
         {
-            var newProduct = _mapper.Map<Order>(dto);
+            try
+            {
+                var newProduct = _mapper.Map<Order>(dto);
 
-            var createdProduct = await _orderRepo.CreateAsync(newProduct, dto.ProductIds, cancellationToken);
-            return Ok(createdProduct);
+                var createdProduct = await _orderRepo.CreateAsync(newProduct, dto.ProductIds, cancellationToken);
+                return Ok(createdProduct);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new BadRequestResult(e.Message));
+            }
+
         }
 
         [HttpPatch("{id}/updatestatus/{statusCode}")]

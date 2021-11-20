@@ -31,10 +31,21 @@ namespace ProductService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductReadDto>>> Get(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<ProductReadDto>>> Get(
+            [FromQuery(Name = "ids")] IReadOnlyList<int> ids,
+            [FromQuery(Name = "findByIds")] bool findByIds = false,
+            CancellationToken cancellationToken = default)
         {
-            var products =  await _productRepo.GetAllAsync(cancellationToken);
-            return Ok(products);
+            if (findByIds)
+            {
+                var result = await _productRepo.GetProductsByIds(ids, cancellationToken);
+                return Ok(result);
+            }
+            else
+            {
+                var result = await _productRepo.GetAllAsync(cancellationToken);
+                return Ok(result);
+            }
         }
 
         [HttpGet("{id:int}")]
@@ -42,7 +53,7 @@ namespace ProductService.Controllers
         {
             try
             {
-                var product =  await _productRepo.GetByIdAsync(id, cancellationToken);
+                var product = await _productRepo.GetByIdAsync(id, cancellationToken);
                 if (product is null)
                 {
                     return NotFound(new NotFoundResult());
@@ -66,7 +77,8 @@ namespace ProductService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProductReadDto>> Put(int id, ProductWriteDto dto, CancellationToken cancellationToken)
+        public async Task<ActionResult<ProductReadDto>> Put(int id, ProductWriteDto dto,
+            CancellationToken cancellationToken)
         {
             if (id != dto.Id)
             {
