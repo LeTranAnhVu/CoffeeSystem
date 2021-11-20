@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "ProductSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateWay", "ApiGateWay\ApiGateWay.csproj", "{ACB72DBC-AE33-4D23-BE98-E9946A1E2D22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "OrderService\OrderService.csproj", "{34BC7F11-145D-42D9-AEC3-669FAF4C52B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{ACB72DBC-AE33-4D23-BE98-E9946A1E2D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB72DBC-AE33-4D23-BE98-E9946A1E2D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACB72DBC-AE33-4D23-BE98-E9946A1E2D22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34BC7F11-145D-42D9-AEC3-669FAF4C52B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34BC7F11-145D-42D9-AEC3-669FAF4C52B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34BC7F11-145D-42D9-AEC3-669FAF4C52B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34BC7F11-145D-42D9-AEC3-669FAF4C52B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
