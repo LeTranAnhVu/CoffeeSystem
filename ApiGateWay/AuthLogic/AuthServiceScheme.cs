@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using ApiGateWay.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -17,32 +18,62 @@ namespace ApiGateWay.AuthLogic
 
     public class AuthServiceHandler : AuthenticationHandler<AuthServiceSchemeOptions>
     {
-        public AuthServiceHandler(IOptionsMonitor<AuthServiceSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        private readonly IAuthService _authService;
+        private readonly ILogger<AuthServiceHandler> _logger;
+
+        public AuthServiceHandler(ILoggerFactory loggerFactory,IAuthService authService, IOptionsMonitor<AuthServiceSchemeOptions> options,UrlEncoder encoder, ISystemClock clock) : base(options, loggerFactory, encoder, clock)
         {
+            _logger = loggerFactory.CreateLogger<AuthServiceHandler>();
+            _authService = authService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var endpoint = Context.GetEndpoint();
-            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            try
             {
-                return await Task.FromResult(AuthenticateResult.NoResult());
+                var endpoint = Context.GetEndpoint();
+                if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+                {
+                    return await Task.FromResult(AuthenticateResult.NoResult());
+                }
+
+                // Get the token
+                var token = Context.Request.Headers.Authorization.ToString();
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    return await Task.FromResult(AuthenticateResult.Fail("Unauthenticated"));
+                }
+
+                var tokenArr = token.Split(" ");
+                var scheme = tokenArr[0];
+                var accessToken = tokenArr[1];
+                var authResult = await _authService.ValidateUser(accessToken, scheme);
+
+                if (!authResult.Succeeded)
+                {
+                    return await Task.FromResult(AuthenticateResult.Fail("Unauthenticated"));
+                }
+
+                var authResultUser = authResult.User;
+                var claims = new List<Claim>
+                {
+                    new (ClaimTypes.Email,authResultUser.Email),
+                    new (ClaimTypes.Name,authResultUser.Username),
+                };
+                // generate claimsIdentity on the name of the class
+                var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
+
+                // generate AuthenticationTicket from the Identity
+                // and current authentication scheme
+                var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), Scheme.Name);
+                return await Task.FromResult(AuthenticateResult.Success(ticket));
             }
-            var claims = new[]
+            catch (Exception e)
             {
-                new Claim(ClaimTypes.NameIdentifier, "1")
-            };
+                _logger.LogWarning($"Authentication fail Error is: {e.Message}");
+                return await Task.FromResult(AuthenticateResult.Fail("Unauthenticated"));
+            }
 
-            // Console.WriteLine(Request);
-
-            // generate claimsIdentity on the name of the class
-            var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
-
-            // generate AuthenticationTicket from the Identity
-            // and current authentication scheme
-            var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), Scheme.Name);
-            return await Task.FromResult(AuthenticateResult.Success(ticket));
-            // return await Task.FromResult(AuthenticateResult.Fail("fail"));
         }
     }
 }

@@ -1,4 +1,4 @@
-using AuthService.Contracts;
+using AuthService.Dtos;
 using AuthService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace AuthService.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<RegisterResponseContract>> Register(RegisterRequestContract registerRequestContract, CancellationToken cancellationToken)
+        public async Task<ActionResult<RegisterResponseDto>> Register(RegisterRequestDto registerRequestContract, CancellationToken cancellationToken)
         {
             var registerRequest = new RegisterRequest
             {
@@ -39,14 +39,14 @@ namespace AuthService.Controllers
                 });
             }
 
-            return new RegisterResponseContract
+            return new RegisterResponseDto
             {
                 Message = "Register successful"
             };
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponseContract>> Login(LoginRequestContract loginRequestContract, CancellationToken cancellationToken)
+        public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto loginRequestContract, CancellationToken cancellationToken)
         {
             var loginRequest = new LoginRequest()
             {
@@ -63,15 +63,15 @@ namespace AuthService.Controllers
                 });
             }
 
-            return new LoginResponseContract
+            return new LoginResponseDto
             {
                 AccessToken = loginResult.Token
             };
         }
 
         [Authorize]
-        [HttpPost("validateToken")]
-        public async Task<ActionResult<AuthResult>> ValidateToken(CancellationToken cancellationToken)
+        [HttpGet("validateToken")]
+        public ActionResult<AuthResult> ValidateToken(CancellationToken cancellationToken)
         {
             var user = _httpContextAccessor.HttpContext.User;
             var result = _identityService.ValidateToken(user);

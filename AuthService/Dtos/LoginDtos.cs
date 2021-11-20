@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthService.Contracts
+namespace AuthService.Dtos
 {
-    public class LoginRequestContract
+    public class LoginRequestDto
     {
         [Required]
         public string Email { get; set; }
@@ -10,7 +10,7 @@ namespace AuthService.Contracts
         public string Password { get; set; }
     }
 
-    public class LoginResponseContract
+    public class LoginResponseDto
     {
         public string AccessToken { get; set; }
     }

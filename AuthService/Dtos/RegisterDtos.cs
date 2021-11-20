@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthService.Contracts
+namespace AuthService.Dtos
 {
-    public class RegisterRequestContract
+    public class RegisterRequestDto
     {
         [Required]
         public string Username { get; set; }
@@ -12,7 +12,7 @@ namespace AuthService.Contracts
         public string Password { get; set; }
     }
 
-    public class RegisterResponseContract
+    public class RegisterResponseDto
     {
         public string Message { get; set; }
     }

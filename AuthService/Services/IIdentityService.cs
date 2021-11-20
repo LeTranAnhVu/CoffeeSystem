@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using AuthService.Contracts;
+using AuthService.Dtos;
 using Microsoft.AspNetCore.Identity;
 
 namespace AuthService.Services
@@ -38,7 +38,6 @@ namespace AuthService.Services
         public IEnumerable<string> Errors { get; set; }
         public bool Succeeded { get; set; }
         public string Token { get; set; }
-
-        public UserReadContract User { get; set; }
+        public UserReadDto User { get; set; }
     }
 }

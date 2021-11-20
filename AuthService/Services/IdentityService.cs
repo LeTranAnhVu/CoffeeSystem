@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using AuthService.Contracts;
+using AuthService.Dtos;
 using AuthService.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -109,7 +109,7 @@ namespace AuthService.Services
             return new AuthResult
             {
                 Succeeded = true,
-                User = new UserReadContract
+                User = new UserReadDto
                 {
                     Email = email,
                     Username = username
