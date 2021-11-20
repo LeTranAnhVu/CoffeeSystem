@@ -8,18 +8,15 @@ public class Order
     public int OrderedBy { get; set; }
     public virtual string StatusName
     {
-        get{
-            switch (StatusCode)
+        get
+        {
+            return StatusCode switch
             {
-                case OrderStatusCode.Ordered:
-                    return OrderStatus.Ordered;
-                case OrderStatusCode.Preparing:
-                    return OrderStatus.Preparing;
-                case OrderStatusCode.Ready:
-                    return OrderStatus.Ready;
-                default:
-                    return OrderStatus.Cancelled;
-            }
+                OrderStatusCode.Ordered => OrderStatus.Ordered,
+                OrderStatusCode.Preparing => OrderStatus.Preparing,
+                OrderStatusCode.Ready => OrderStatus.Ready,
+                _ => OrderStatus.Cancelled,
+            };
         }
     }
     public OrderStatusCode StatusCode { get; set; }
