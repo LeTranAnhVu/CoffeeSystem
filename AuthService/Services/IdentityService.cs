@@ -33,7 +33,7 @@ namespace AuthService.Services
 
             // Check email exists
             var exists = await _userManager.FindByEmailAsync(email);
-            if (exists is null)
+            if (exists is not null)
             {
                 return new AuthResult
                 {

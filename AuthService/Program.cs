@@ -2,14 +2,12 @@ using System;
 using System.Text;
 using AuthService.Helpers;
 using AuthService.Models;
+using AuthService.SeedData;
 using AuthService.Services;
 using AuthService.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,4 +82,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+PrepDb.PrepPopulation(app, app.Environment.IsProduction());
 app.Run();
