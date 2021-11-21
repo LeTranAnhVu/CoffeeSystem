@@ -1,22 +1,32 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using ApiGateWay.Services;
+using AuthForServicesExtension.Services.AuthService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ApiGateWay.AuthLogic
+namespace AuthForServicesExtension.AuthLogic
 {
     public static class AuthServiceExtension
     {
-        public static AuthenticationBuilder AddAuthService(this IServiceCollection services)
+        public static AuthenticationBuilder AddAuthService(this IServiceCollection services, ConfigurationManager configureManager)
         {
             var scheme = AuthServiceScheme.DefaultName;
-            return services.AddAuthService(scheme, options => { });
+            return services.AddAuthService(scheme, configureManager, options => { });
         }
 
-        public static AuthenticationBuilder AddAuthService(this IServiceCollection services, string scheme,  Action<AuthServiceSchemeOptions>? configureOptions)
+        public static AuthenticationBuilder AddAuthService(this IServiceCollection services,string scheme,ConfigurationManager configureManager, Action<AuthServiceSchemeOptions>? configureOptions)
         {
+            services.AddHttpClient();
+            services.Configure<AuthServiceSettings>(configureManager.GetSection("AuthServiceSettings"));
+            services.AddScoped<IAuthService, AuthService>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             scheme = string.IsNullOrWhiteSpace(scheme) ? AuthServiceScheme.DefaultName : scheme;
             return services
                 .AddAuthentication(AuthServiceScheme.DefaultName)

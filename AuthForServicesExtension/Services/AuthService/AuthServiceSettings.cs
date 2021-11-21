@@ -1,4 +1,4 @@
-namespace ApiGateWay.Services.AuthService;
+namespace AuthForServicesExtension.Services.AuthService;
 
 public class AuthServiceSettings : BaseInternalServiceSettings
 {
