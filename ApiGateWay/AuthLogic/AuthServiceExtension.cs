@@ -7,6 +7,23 @@ using Microsoft.Extensions.Options;
 
 namespace ApiGateWay.AuthLogic
 {
+    public static class AuthServiceExtension
+    {
+        public static AuthenticationBuilder AddAuthService(this IServiceCollection services)
+        {
+            var scheme = AuthServiceScheme.DefaultName;
+            return services.AddAuthService(scheme, options => { });
+        }
+
+        public static AuthenticationBuilder AddAuthService(this IServiceCollection services, string scheme,  Action<AuthServiceSchemeOptions>? configureOptions)
+        {
+            scheme = string.IsNullOrWhiteSpace(scheme) ? AuthServiceScheme.DefaultName : scheme;
+            return services
+                .AddAuthentication(AuthServiceScheme.DefaultName)
+                .AddScheme<AuthServiceSchemeOptions, AuthServiceHandler> (scheme, configureOptions);
+        }
+    }
+
     public static class AuthServiceScheme
     {
         public static readonly string DefaultName =  "Custom";

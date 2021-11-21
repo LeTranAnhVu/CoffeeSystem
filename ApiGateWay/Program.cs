@@ -8,8 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
-builder.Services.AddAuthentication(AuthServiceScheme.DefaultName).AddScheme<AuthServiceSchemeOptions, AuthServiceHandler>(AuthServiceScheme.DefaultName,options => { });
-
+builder.Services.AddAuthService();
 // Internal Services
 builder.Services.AddHttpClient();
 // Product Service Configuration
