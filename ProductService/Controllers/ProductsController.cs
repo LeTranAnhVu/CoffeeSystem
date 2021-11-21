@@ -68,6 +68,7 @@ namespace ProductService.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ProductReadDto>> Create(ProductWriteDto dto, CancellationToken cancellationToken)
         {
@@ -76,6 +77,7 @@ namespace ProductService.Controllers
             return Ok(createdProduct);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductReadDto>> Put(int id, ProductWriteDto dto,
             CancellationToken cancellationToken)
@@ -104,6 +106,7 @@ namespace ProductService.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {

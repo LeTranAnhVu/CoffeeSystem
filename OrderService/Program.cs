@@ -1,4 +1,6 @@
+using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OrderService.Models;
 using OrderService.Repositories;
 using OrderService.Services.ProductService;
@@ -11,6 +13,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseInMemoryDatabase("Test");
 });
+
+builder.Services.AddAuthService(builder.Configuration);
 
 // Internal Services
 builder.Services.AddHttpClient();
@@ -40,6 +44,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

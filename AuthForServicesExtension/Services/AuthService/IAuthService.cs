@@ -1,6 +1,6 @@
-using ApiGateWay.Dtos;
+using AuthForServicesExtension.Dtos;
 
-namespace ApiGateWay.Services;
+namespace AuthForServicesExtension.Services.AuthService;
 
 public interface IAuthService
 {

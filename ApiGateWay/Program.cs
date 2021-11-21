@@ -1,19 +1,16 @@
-using ApiGateWay.AuthLogic;
-using ApiGateWay.Services;
-using ApiGateWay.Services.AuthService;
-using Microsoft.AspNetCore.Authorization;
+using AuthForServicesExtension.AuthLogic;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
-builder.Services.AddAuthService();
+builder.Services.AddAuthService(builder.Configuration);
 // Internal Services
 builder.Services.AddHttpClient();
 // Product Service Configuration
-builder.Services.Configure<AuthServiceSettings>(builder.Configuration.GetSection("AuthServiceSettings"));
-builder.Services.AddScoped<IAuthService, AuthService>();
+// builder.Services.Configure<AuthServiceSettings>(builder.Configuration.GetSection("AuthServiceSettings"));
+// builder.Services.AddScoped<IAuthService, AuthService>();
 
 // builder.Services.AddAuthorization(options =>
 // {

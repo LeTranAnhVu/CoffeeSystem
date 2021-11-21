@@ -1,8 +1,9 @@
 using System.Net.Http.Headers;
-using ApiGateWay.Dtos;
+using System.Net.Http.Json;
+using AuthForServicesExtension.Dtos;
 using Microsoft.Extensions.Options;
 
-namespace ApiGateWay.Services.AuthService;
+namespace AuthForServicesExtension.Services.AuthService;
 
 public class AuthService : IAuthService
 {
@@ -22,7 +23,7 @@ public class AuthService : IAuthService
     {
         try
         {
-            _authHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            _authHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, accessToken);
 
             var authResult =
                 await _authHttpClient.GetFromJsonAsync<AuthResponseDto>("/api/auth/validateToken",

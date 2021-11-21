@@ -1,4 +1,4 @@
-namespace ApiGateWay.Dtos;
+namespace AuthForServicesExtension.Dtos;
 
 public class UserReadDto
 {

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using OrderService.Constants;
 
 namespace OrderService.Models;
@@ -5,7 +6,8 @@ namespace OrderService.Models;
 public class Order
 {
     public int Id { get; set; }
-    public int OrderedBy { get; set; }
+    [EmailAddress]
+    public string OrderedBy { get; set; }
     public virtual string StatusName
     {
         get

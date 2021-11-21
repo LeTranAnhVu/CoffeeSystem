@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Constants;
 using OrderService.Dtos;
@@ -8,6 +10,7 @@ using NotFoundResult = OrderService.FailResults.NotFoundResult;
 using BadRequestResult = OrderService.FailResults.BadRequestResult;
 namespace OrderService.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
@@ -15,12 +18,19 @@ namespace OrderService.Controllers
         private readonly ILogger<OrdersController> _logger;
         private readonly IOrderRepository _orderRepo;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrdersController(ILogger<OrdersController> logger, IOrderRepository orderRepository, IMapper mapper)
+        public OrdersController(
+            ILogger<OrdersController> logger,
+            IOrderRepository orderRepository,
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor
+            )
         {
             _logger = logger;
             _orderRepo = orderRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -55,8 +65,14 @@ namespace OrderService.Controllers
         {
             try
             {
-                var newProduct = _mapper.Map<Order>(dto);
+                // Get user
+                var user = _httpContextAccessor.HttpContext.User;
+                var userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
 
+                if (string.IsNullOrWhiteSpace(userEmail)) return Unauthorized();
+
+                var newProduct = _mapper.Map<Order>(dto);
+                newProduct.OrderedBy = userEmail;
                 var createdProduct = await _orderRepo.CreateAsync(newProduct, dto.ProductIds, cancellationToken);
                 return Ok(createdProduct);
             }

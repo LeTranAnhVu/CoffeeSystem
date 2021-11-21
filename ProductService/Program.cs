@@ -1,3 +1,4 @@
+using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Models;
 using ProductService.Repositories;
@@ -10,6 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseInMemoryDatabase("Test");
 });
+
+builder.Services.AddAuthService(builder.Configuration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // REPOSITORY
