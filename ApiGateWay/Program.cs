@@ -2,6 +2,17 @@ using AuthForServicesExtension.AuthLogic;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        configurePolicy =>
+        {
+            configurePolicy.WithOrigins(builder.Configuration.GetSection("Cors").Value);
+        });
+});
+
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 

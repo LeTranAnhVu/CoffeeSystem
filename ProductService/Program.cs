@@ -6,6 +6,16 @@ using ProductService.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        configurePolicy =>
+        {
+            configurePolicy.WithOrigins(builder.Configuration.GetSection("Cors").Value);
+        });
+});
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -30,7 +40,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(MyAllowSpecificOrigins);
 // app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
