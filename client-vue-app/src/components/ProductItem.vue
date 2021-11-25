@@ -5,16 +5,18 @@
       <p>{{product.price}}</p>
     </div>
     <div class="action">
-      <v-btn>
+      <Button>
         Order
-      </v-btn>
+      </Button>
     </div>
   </div>
 </template>
 
 <script>
+  import Button from 'primevue/button'
   export default {
     name: 'ProductItem',
+    components: {Button},
     props: {
       product: {
         type: Object,

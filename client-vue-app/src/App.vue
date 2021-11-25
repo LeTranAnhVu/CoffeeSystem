@@ -1,13 +1,11 @@
 <template>
-  <v-app>
+  <div>
     <Header/>
-    <v-main>
-      <div class="mt-16">
-        <router-view></router-view>
-      </div>
-    </v-main>
+    <div class="mt-16">
+      <router-view></router-view>
+    </div>
   <Footer/>
-  </v-app>
+  </div>
 </template>
 
 <script>

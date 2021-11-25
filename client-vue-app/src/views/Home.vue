@@ -1,5 +1,7 @@
 <template>
-  <ProductList/>
+  <div class="product-list">
+    <ProductList/>
+  </div>
 </template>
 
 <script>
@@ -15,5 +17,8 @@
 </script>
 
 <style scoped>
-
+  .product-list{
+    width: 50%;
+    margin: auto;
+  }
 </style>

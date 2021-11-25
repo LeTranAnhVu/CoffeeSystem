@@ -1,35 +1,88 @@
 <template>
-  <v-app-bar app>
-    <v-app-bar-title>Brian's Coffee</v-app-bar-title>
-    <v-spacer></v-spacer>
-    <v-btn class="mr-3" to="/">
-      Home
-    </v-btn>
-    <v-btn class="mr-3" to="/cart">
-      <v-icon color="grey lighten-1">
-        mdi-cart
-      </v-icon>
-    </v-btn>
-    <v-divider inset vertical></v-divider>
+  <div>
+    <Menubar :model="items">
+      <template #start>
+        <p>Brian's coffee</p>
+      </template>
+      <template #end>
+        <!--<Button icon="pi pi-shopping-cart" class="btn-cart p-button-lg p-button-rounded p-button-text p-mr-3" badge="2" to="/cart" />-->
 
-    <!--Login part-->
-        <LoginDialog class="mr-2 ml-5" v-bind="attrs" v-on="on"/>
+        <Button class="p-mr-3 p-button-secondary" label="Login" icon="pi pi-fw pi-user" @click="openLogin" />
+        <Dialog header="Login" v-model:visible="isShowLogin" :style="{width: '50vw'}">
+          <LoginForm/>
+          <template #footer>
+            <Button label="Login" icon="pi pi-check" @click="handleLogin" autofocus />
+          </template>
+        </Dialog>
+
+        <Button label="Register" icon="pi pi-fw pi-user-plus" @click="openRegister" />
+        <Dialog header="Register" v-model:visible="isShowRegister" :style="{width: '50vw'}">
+          <RegisterForm/>
+          <template #footer>
+            <Button label="Register" icon="pi pi-check" @click="handleRegister" autofocus />
+          </template>
+        </Dialog>
+      </template>
 
 
-    <!--Register part-->
-    <RegisterDialog/>
-
-
-  </v-app-bar>
+    </Menubar>
+  </div>
 </template>
 
 <script>
-  import RegisterDialog from '../RegisterDialog'
-  import LoginDialog from '../LoginDialog'
+  import {ref} from 'vue'
+  import Menubar from 'primevue/menubar';
+  import Dialog from 'primevue/dialog';
+  import Button from 'primevue/button';
+  import LoginForm from '../LoginForm'
+  import RegisterForm from '../RegisterForm'
+
   export default {
     name: 'Header',
-    components: {RegisterDialog, LoginDialog},
+    components: {
+      Menubar, Dialog, Button,
+      LoginForm,
+      RegisterForm,
+    },
 
+    setup() {
+      const isShowLogin = ref(false);
+      const isShowRegister = ref(false);
+      const openLogin = () => {
+        handleRegister()
+        isShowLogin.value = true;
+      };
+
+      const openRegister = () => {
+        handleLogin()
+        isShowRegister.value = true;
+      };
+
+      const handleLogin = () => {
+        isShowLogin.value = false;
+      };
+
+      const handleRegister = () => {
+        isShowRegister.value = false;
+      };
+
+      const items = ref([
+        {
+          label:'Home',
+          to: '/'
+        },
+        {
+          label:'',
+          icon:'pi pi-fw pi-shopping-cart',
+          to: '/cart'
+        },
+      ]);
+
+      return {
+        items,
+        isShowLogin, openLogin, handleLogin,
+        isShowRegister, openRegister, handleRegister}
+    }
   }
 </script>
 
@@ -39,8 +92,6 @@
   .v-overlay__content {
     width: 900px;
     transform: translateY(-35%);
-
   }
-
 }
 </style>

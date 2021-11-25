@@ -1,12 +1,16 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import vuetify from './plugins/vuetify'
-import { loadFonts } from './plugins/webfontloader'
 import router from './Router'
+import PrimeVue from 'primevue/config';
 
-loadFonts()
+import "primevue/resources/themes/saga-blue/theme.css"
+import "primevue/resources/primevue.min.css"
+import "primeicons/primeicons.css"
+import 'primeflex/primeflex.css';
+
 
 const app = createApp(App)
 app.use(router)
-app.use(vuetify)
+app.use(PrimeVue);
+
 app.mount('#app')

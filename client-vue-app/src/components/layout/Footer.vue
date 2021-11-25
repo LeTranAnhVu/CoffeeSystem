@@ -1,15 +1,9 @@
 <template>
-  <v-footer
-      app
-      padless
-  >
-    <v-col
-        class="text-center"
-        cols="12"
-    >
+  <div class="footer">
+    <p class="p-text-center">
       {{ new Date().getFullYear() }} — <strong>Brian's coffee system</strong>
-    </v-col>
-  </v-footer>
+    </p>
+  </div>
 </template>
 
 <script>
