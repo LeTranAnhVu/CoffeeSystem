@@ -9,7 +9,8 @@
     name: 'Home',
     components: {
       ProductList
-    }
+    },
+
   }
 </script>
 
