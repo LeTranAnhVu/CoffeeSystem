@@ -9,7 +9,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         configurePolicy =>
         {
-            configurePolicy.WithOrigins(builder.Configuration.GetSection("Cors").Value);
+            configurePolicy.WithOrigins(builder.Configuration.GetSection("Cors").Value)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 
@@ -31,6 +33,7 @@ builder.Services.AddHttpClient();
 
 
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapGet("/", () => "Api GateWay is running!");
