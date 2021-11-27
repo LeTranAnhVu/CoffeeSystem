@@ -1,3 +1,4 @@
+using System.Reflection;
 using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseInMemoryDatabase("Test");
+    // options.UseInMemoryDatabase("Test");
+    options.UseSqlite("Filename=Order.db", options =>
+    {
+        options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+    });
 });
 
 builder.Services.AddAuthService(builder.Configuration);

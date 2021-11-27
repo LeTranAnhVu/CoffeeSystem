@@ -30,21 +30,29 @@ public class OrderRepository : IOrderRepository
         // Check Product
         var products= await ValidateProducts(productIds);
 
-        order.StatusCode = OrderStatusCode.Ordered;
-        order.OrderedAt = DateTime.UtcNow;
-        await _context.Orders.AddAsync(order, cancellationToken);
-
-        var orderedProducts = productIds.Select(productId => new OrderedProduct
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
         {
-            OrderId = order.Id,
-            ProductId = productId,
-            Product = products.FirstOrDefault(p => p.Id == productId)
-        });
+            order.StatusCode = OrderStatusCode.Ordered;
+            order.OrderedAt = DateTime.UtcNow;
+            await _context.Orders.AddAsync(order, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-        await _context.OrderedProducts.AddRangeAsync(orderedProducts, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+            var orderedProducts = productIds.Select(productId => new OrderedProduct
+            {
+                OrderId = order.Id,
+                ProductId = productId,
+            });
 
-        return order;
+            await _context.OrderedProducts.AddRangeAsync(orderedProducts, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return order;
+        } catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     private async Task<IReadOnlyList<Product>> ValidateProducts(IReadOnlyList<int> productIds)
