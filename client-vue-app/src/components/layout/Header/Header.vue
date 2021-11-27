@@ -4,14 +4,21 @@
       <template #start>
         <p>Brian's coffee</p>
       </template>
-      <template #end >
+      <template #end>
         <div class="p-d-flex">
-          <Divider layout="vertical" />
+          <Divider layout="vertical"/>
+          <Button class="p-button-icon p-button-text p-button-danger" type="button" @click="toggle"
+                  icon="pi pi-fw pi-shopping-cart">
+          </Button>
+          <OverlayPanel ref="op" :showCloseIcon="true" style="width: 450px" :breakpoints="{'960px': '75vw'}">
+            <CartList is-overlay/>
+          </OverlayPanel>
+
           <template v-if="isLogin">
             <Button class="p-button-text p-button-info" type="button" :label="userInfo.username" @click="openUserMenu"
                     aria-haspopup="true"
-                    aria-controls="overlay_menu"/>
-            <Menu id="overlay_menu" ref="userMenu" :model="userMenuItems" :popup="true"/>
+                    aria-controls="user_menu"/>
+            <Menu id="user_menu" ref="userMenu" :model="userMenuItems" :popup="true"/>
           </template>
           <template v-else>
             <Button class="p-mr-3 p-button-primary p-button-text" label="Login" icon="pi pi-fw pi-user"
@@ -38,17 +45,22 @@ import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import Menu from 'primevue/menu'
 import Divider from 'primevue/divider'
+import OverlayPanel from 'primevue/overlaypanel'
+
 import LoginForm from '@/components/form/LoginForm'
 import RegisterForm from '@/components/form/RegisterForm'
+import CartList from '@/components/Cart/CartList'
+
 import {useStore} from 'vuex'
 import useLogout from '@/composables/useLogout'
 
 export default {
   name: 'Header',
   components: {
-    Menubar, Dialog, Button, Menu, Divider,
+    Menubar, Dialog, Button, Menu, Divider, OverlayPanel,
     LoginForm,
     RegisterForm,
+    CartList
   },
 
   setup() {
@@ -117,6 +129,12 @@ export default {
       isShowRegister.value = false
     }
 
+    // OP
+    const op = ref()
+    const toggle = (event) => {
+      op.value.toggle(event)
+    }
+
     // menu
     const menus = ref([
       {
@@ -125,9 +143,9 @@ export default {
         to: '/'
       },
       {
-        label: '',
-        icon: 'pi pi-fw pi-shopping-cart',
-        to: '/cart'
+        label: 'Order',
+        icon: 'pi pi-fw pi-list',
+        to: '/orders'
       },
     ])
 
@@ -138,7 +156,8 @@ export default {
       isShowRegister, openRegisterDialog, closeRegisterDialog,
       isLogin, userInfo,
       handleLogout,
-      userMenuItems, userMenu, openUserMenu
+      userMenuItems, userMenu, openUserMenu,
+      toggle, op
     }
   }
 }

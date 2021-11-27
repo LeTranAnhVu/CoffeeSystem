@@ -1,5 +1,5 @@
 const baseUrl = process.env.VUE_APP_BASE_URL
-export async function getAll() {
+export async function fetchProducts() {
   try {
     const api = '/products'
     const response = await fetch(baseUrl + api)
@@ -8,4 +8,8 @@ export async function getAll() {
     return []
   }
 
+}
+
+export default {
+  fetchProducts
 }

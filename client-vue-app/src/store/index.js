@@ -1,19 +1,15 @@
 import {createStore} from 'vuex'
-import user from './modules/user-store'
+import cart from '@/store/modules/cart-store'
+import product from '@/store/modules/product-store'
+import order from '@/store/modules/order-store'
+import user from '@/store/modules/user-store'
 
 const store = createStore({
   modules: {
+    cart,
+    order,
+    product,
     user
-  },
-  state () {
-    return {
-      count: 0
-    }
-  },
-  mutations: {
-    increment (state) {
-      state.count++
-    }
   }
 })
 

@@ -70,7 +70,7 @@ const user = {
           await context.dispatch('logout')
         }
 
-        const {succeeded, user} = await authApi.validateAccessToken(savedToken)
+        const {succeeded, user} = await authApi.validateAccessToken()
         if (!succeeded) {
           await context.dispatch('logout')
         }

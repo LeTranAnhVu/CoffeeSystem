@@ -1,10 +1,10 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Home from './views/Home'
-import Cart from './views/Cart'
+import Order from './views/Order'
 
 export const routes = [
   { path: '/', component: Home },
-  { path: '/cart', component: Cart },
+  { path: '/orders', component: Order },
 ]
 
 

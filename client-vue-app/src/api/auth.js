@@ -42,7 +42,7 @@ async function validateAccessToken(accessToken) {
   const api = '/auth/validateToken'
   const response = await fetch(baseUrl + api, {
     method: 'GET',
-    headers: createDefaultHeader(accessToken)
+    headers: createDefaultHeader()
   })
 
   const statusCode = response.statusCode
