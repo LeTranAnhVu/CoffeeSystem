@@ -89,7 +89,12 @@ namespace AuthService.Services
             return new AuthResult
             {
                 Succeeded = true,
-                Token = token
+                Token = token,
+                User = new UserReadDto
+                {
+                    Email = user.Email,
+                    Username = user.UserName
+                }
             };
         }
 

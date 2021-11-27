@@ -65,7 +65,9 @@ namespace AuthService.Controllers
 
             return new LoginResponseDto
             {
-                AccessToken = loginResult.Token
+                AccessToken = loginResult.Token,
+                Username = loginResult.User.Username,
+                Email = loginResult.User.Email
             };
         }
 
