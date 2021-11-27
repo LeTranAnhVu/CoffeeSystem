@@ -1,5 +1,5 @@
 <template>
-  <div class="product-list">
+  <div class="product-list p-mt-6">
     <ProductList/>
   </div>
 </template>
@@ -12,13 +12,13 @@
     components: {
       ProductList
     },
-
   }
 </script>
 
 <style scoped>
   .product-list{
     width: 50%;
+    min-width: 400px;
     margin: auto;
   }
 </style>
