@@ -1,12 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using SignalRService.Hubs;
 
 namespace SignalRService.Controllers;
 
-public class TestController : Controller
+[Route("/realtime/api/[controller]")]
+[ApiController]
+public class TestController : ControllerBase
 {
-    // GET
-    public IActionResult Index()
+    private readonly IHubContext<TestHub, ITestHub> _testHubContext;
+
+    public TestController(IHubContext<TestHub, ITestHub> hubContext)
     {
-        return View();
+        _testHubContext = hubContext;
+    }
+
+    // GET
+    public async Task<IActionResult> Test()
+    {
+        var getRandom = new Random();
+        await _testHubContext.Clients.Group("private-group").ReceiveMessage("Brian",
+            $" The temperature will be {getRandom.Next(-10, 20)}");
+        // await _testHubContext.Clients.All.ReceiveMessage("Brian",
+        //     $" The temperature will be {getRandom.Next(-10, 20)}");
+
+        return Ok("Test return ok");
     }
 }
