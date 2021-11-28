@@ -7,9 +7,9 @@ export const routes = [
   { path: '/orders', component: Order },
 ]
 
-
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
 })
+
 export default router
