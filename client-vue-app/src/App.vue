@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Message v-if="temperature" severity="warn">{{ temperature }}</Message>
+    <Message v-if="wsTestMessage" severity="success">{{ wsTestMessage }}</Message>
     <Header/>
     <router-view></router-view>
     <Footer/>
@@ -31,11 +31,13 @@ export default {
       const env = process.env.VUE_APP_TITLE_INFO
       document.title = `${env} - Brian's coffee`
       await checkUserLogin()
+
+      await store.dispatch('listenToTestMessage')
     })
 
-    const temperature = computed(() => store.getters.getTemp)
+    const wsTestMessage = computed(() => store.getters.getTestMessage)
     return {
-      temperature
+      wsTestMessage
     }
   },
 }

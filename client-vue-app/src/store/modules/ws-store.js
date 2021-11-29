@@ -1,33 +1,43 @@
 import signalRSingleton from '@/websocket/signalRSingleton'
+import methodContracts from '@/websocket/methodContracts'
 
 const websocketModule = {
   state: () => ({
-    temperature: null
+    message: null
 
   }),
   mutations: {
-    WEB_SOCKET_RECEIVE_MESSAGE: (state, {who, report}) => {
-      state.temperature = `${who} said that: ${report}`
+    SET_WEB_SOCKET_TEST_MESSAGE: (state, message) => {
+      state.message = message
     }
   },
   actions: {
-    async joinGroup(context){
+    async listenToTestMessage(context) {
       const signalR = await signalRSingleton.getConnection()
-      await signalR.invoke('JoinQuestionGroup', 'private-group')
-      signalR.on('ReceiveMessage', (who, report) => {
-        console.log('Start listen on private-group status in web socket')
-        context.commit('WEB_SOCKET_RECEIVE_MESSAGE', {who, report})
+      signalR.on(methodContracts.TestMessage, (message) => {
+        context.commit('SET_WEB_SOCKET_TEST_MESSAGE', message)
       })
     },
-    async leaveGroup(context){
+    async joinGroup(context) {
       const signalR = await signalRSingleton.getConnection()
-      console.log('Leave private-group status in web socket')
-      await signalR.invoke('LeaveQuestionGroup', 'private-group')
+      const groupName = 'order-group'
+      await signalR.invoke(methodContracts.JoinGroup, groupName)
+      console.log(`Start listen on ${groupName} status in websocket`)
+      // ... on some channel
+      // signalR.on(methodContracts.TestMessage, (message) => {
+      //   context.commit('SET_WEB_SOCKET_TEST_MESSAGE', message)
+      // })
+    },
+    async leaveGroup(context) {
+      const signalR = await signalRSingleton.getConnection()
+      const groupName = 'order-group'
+      console.log(`Leave ${groupName} status in web socket`)
+      await signalR.invoke(methodContracts.LeaveGroup, groupName)
     }
   },
   getters: {
-    getTemp(state) {
-      return state.temperature
+    getTestMessage(state) {
+      return state.message
     }
   }
 }

@@ -8,22 +8,18 @@ namespace SignalRService.Controllers;
 [ApiController]
 public class TestController : ControllerBase
 {
-    private readonly IHubContext<TestHub, ITestHub> _testHubContext;
+    private readonly IHubContext<CommonHub, ICommonHub> _commonHubContext;
 
-    public TestController(IHubContext<TestHub, ITestHub> hubContext)
+    public TestController(IHubContext<CommonHub, ICommonHub> hubContext)
     {
-        _testHubContext = hubContext;
+        _commonHubContext = hubContext;
     }
 
     // GET
     public async Task<IActionResult> Test()
     {
         var getRandom = new Random();
-        await _testHubContext.Clients.Group("private-group").ReceiveMessage("Brian",
-            $" The temperature will be {getRandom.Next(-10, 20)}");
-        // await _testHubContext.Clients.All.ReceiveMessage("Brian",
-        //     $" The temperature will be {getRandom.Next(-10, 20)}");
-
+        await _commonHubContext.Clients.All.TestMessage($"Welcome to Brian's coffee system - websocket is connected. Current temperature is {getRandom.Next(-10, 20)}° C -  - reported by from Mr. Controller");
         return Ok("Test return ok");
     }
 }

@@ -1,3 +1,4 @@
+using SignalRService.BackgroundServices;
 using SignalRService.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Background services
+builder.Services.AddHostedService<SignalRTestMessageBackgroundService>();
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
@@ -35,5 +38,5 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.UseCors(MyAllowSpecificOrigins);
 app.MapControllers();
-app.MapHub<TestHub>("/realtime/test");
+app.MapHub<CommonHub>("/realtime/commonHub");
 app.Run();
