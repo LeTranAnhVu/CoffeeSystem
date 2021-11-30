@@ -15,7 +15,6 @@ public class TestMessageSubscriber : BackgroundService
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
        stoppingToken.ThrowIfCancellationRequested();
-       _logger.LogInformation("Start subscribe to Rabbit MQ");
        var topic = "order.text";
        _rabbitMqService.ReceiveMessageOnTopic(topic, (string message) =>
        {

@@ -27,10 +27,11 @@ builder.Services.AddRabbitMqService(settingOptions =>
     settingOptions.Port = Convert.ToInt32(config["Port"]);
 });
 
-builder.Services.AddHostedService<TestMessageSubscriber>();
 
 // Background services
 builder.Services.AddHostedService<SignalRTestMessageBackgroundService>();
+builder.Services.AddHostedService<TestMessageSubscriber>();
+builder.Services.AddHostedService<OrderChangeSubscriber>();
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddControllers();

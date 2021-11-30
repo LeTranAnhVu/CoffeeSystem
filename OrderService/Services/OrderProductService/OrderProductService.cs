@@ -50,7 +50,7 @@ public class OrderProductService : IOrderProductService
     {
         var updatedOrder = await _orderRepo.UpdateStatusOrderAsync(id, statusCode, cancellationToken);
         var contract = new OrderStatusChangedContract() { OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode};
-        _mqService.SendMessage($"{_messageTopic}update.status", contract);
+        _mqService.SendMessage($"{_messageTopic}updated.status", contract);
         return updatedOrder;
 
     }
