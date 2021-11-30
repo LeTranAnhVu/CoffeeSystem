@@ -18,6 +18,9 @@ public class RabbitMqService : IRabbitMqService, IDisposable
     private readonly string _exchange = "common_exchange";
     private readonly string _exchangeType = "topic";
 
+    public RabbitMqService()
+    {
+    }
     public RabbitMqService(ILogger<RabbitMqService> logger, IOptions<RabbitMqSettings> settings)
     {
         _logger = logger;
@@ -54,7 +57,7 @@ public class RabbitMqService : IRabbitMqService, IDisposable
 
     public void SendMessage<T>(string topic, T content, bool persistent = true)
     {
-        if(_channel is null) throw new NullReferenceException();
+        if (_channel is null) throw new NullReferenceException();
 
         var contentStr = JsonSerializer.Serialize(content);
         var bytes = Encoding.UTF8.GetBytes(contentStr);
@@ -72,6 +75,8 @@ public class RabbitMqService : IRabbitMqService, IDisposable
 
     public void ReceiveMessageOnTopic<T>(string topic, Action<T?> callback, string? queueName = null)
     {
+        if (_channel is null) throw new NullReferenceException();
+
         if (string.IsNullOrWhiteSpace(queueName))
         {
             queueName = _channel.QueueDeclare().QueueName;

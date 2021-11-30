@@ -7,7 +7,8 @@ namespace RabbitMqServiceExtension;
 
 public static class RabbitMqServiceExtension
 {
-    public static IServiceCollection AddRabbitMqService(this IServiceCollection services, Action<RabbitMqSettings> settingOptions)
+    public static IServiceCollection AddRabbitMqService(this IServiceCollection services,
+        Action<RabbitMqSettings> settingOptions)
     {
         // Set values for Rabbit Mq settings.
         services.Configure<RabbitMqSettings>(settings =>
@@ -19,9 +20,17 @@ public static class RabbitMqServiceExtension
 
         services.AddSingleton<IRabbitMqService, RabbitMqService>(provider =>
         {
-            var logger = provider.GetRequiredService<ILogger<RabbitMqService>>();
-            var options = provider.GetRequiredService<IOptions<RabbitMqSettings>>();
-            return new RabbitMqService(logger, options);
+            try
+            {
+                var logger = provider.GetRequiredService<ILogger<RabbitMqService>>();
+                var options = provider.GetRequiredService<IOptions<RabbitMqSettings>>();
+                return new RabbitMqService(logger, options);
+            }
+            catch (Exception e)
+            {
+                var logger = provider.GetRequiredService<ILogger<RabbitMqNotWorkingService>>();
+                return new RabbitMqNotWorkingService(logger);
+            }
         });
         return services;
     }
