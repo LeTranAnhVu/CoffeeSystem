@@ -1,10 +1,10 @@
 using System.Reflection;
 using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using OrderService.Models;
 using OrderService.Repositories;
 using OrderService.Services.ProductService;
+using RabbitMqServiceExtension;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +32,14 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // AutoMapping
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// RabbitMq
+builder.Services.AddRabbitMqService(settingOptions =>
+{
+    var config = builder.Configuration.GetSection("RabbitMqSettings");
+    settingOptions.HostName = config["HostName"];
+    settingOptions.Port = Convert.ToInt32(config["Port"]);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -17,9 +17,9 @@ public class SignalRTestMessageBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Background service: Send test signalr message");
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation("Background service: Send test signalr message");
             var getRandom = new Random();
             await _hubContext.Clients.All.TestMessage(
                 $"Welcome to Brian's coffee system - websocket is connected. Current temperature is {getRandom.Next(-10, 20)}° C - reported by from Mr.Background service");

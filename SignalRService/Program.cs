@@ -1,3 +1,4 @@
+using RabbitMqServiceExtension;
 using SignalRService.BackgroundServices;
 using SignalRService.Hubs;
 
@@ -16,6 +17,16 @@ builder.Services.AddCors(options =>
                 .AllowCredentials();
         });
 });
+
+// RabbitMq
+builder.Services.AddRabbitMqService(settingOptions =>
+{
+    var config = builder.Configuration.GetSection("RabbitMqSettings");
+    settingOptions.HostName = config["HostName"];
+    settingOptions.Port = Convert.ToInt32(config["Port"]);
+});
+
+builder.Services.AddHostedService<TestMessageSubscriber>();
 
 // Background services
 builder.Services.AddHostedService<SignalRTestMessageBackgroundService>();

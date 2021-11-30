@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuthForServicesExtension\AuthForServicesExtension.csproj" />
+    <ProjectReference Include="..\RabbitMqServiceExtension\RabbitMqServiceExtension.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,11 +6,13 @@ using OrderService.Constants;
 using OrderService.Dtos;
 using OrderService.Models;
 using OrderService.Repositories;
+using RabbitMqServiceExtension.AsyncMessageService;
 using NotFoundResult = OrderService.FailResults.NotFoundResult;
 using BadRequestResult = OrderService.FailResults.BadRequestResult;
 namespace OrderService.Controllers
 {
-    [Authorize]
+    //TODO open it later
+    // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
@@ -19,24 +21,28 @@ namespace OrderService.Controllers
         private readonly IOrderRepository _orderRepo;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRabbitMqService _rabbitMqService;
 
         public OrdersController(
             ILogger<OrdersController> logger,
             IOrderRepository orderRepository,
             IMapper mapper,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IRabbitMqService rabbitMqService
             )
         {
             _logger = logger;
             _orderRepo = orderRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _rabbitMqService = rabbitMqService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> Get(CancellationToken cancellationToken)
         {
             var products =  await _orderRepo.GetAllAsync(cancellationToken);
+            _rabbitMqService.SendMessage("order.text", "test message from order service", true);
             return Ok(products);
         }
 
