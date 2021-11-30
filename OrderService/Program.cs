@@ -3,6 +3,7 @@ using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Models;
 using OrderService.Repositories;
+using OrderService.Services.OrderProductService;
 using OrderService.Services.ProductService;
 using RabbitMqServiceExtension;
 
@@ -26,6 +27,7 @@ builder.Services.AddHttpClient();
 // Product Service Configuration
 builder.Services.Configure<ProductServiceSettings>(builder.Configuration.GetSection("ProductServiceSettings"));
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderProductService, OrderProductService>();
 
 // Repository
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();

@@ -5,44 +5,39 @@ using Microsoft.AspNetCore.Mvc;
 using OrderService.Constants;
 using OrderService.Dtos;
 using OrderService.Models;
-using OrderService.Repositories;
+using OrderService.Services.OrderProductService;
 using RabbitMqServiceExtension.AsyncMessageService;
 using NotFoundResult = OrderService.FailResults.NotFoundResult;
 using BadRequestResult = OrderService.FailResults.BadRequestResult;
 namespace OrderService.Controllers
 {
-    //TODO open it later
     // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
         private readonly ILogger<OrdersController> _logger;
-        private readonly IOrderRepository _orderRepo;
+        private readonly IOrderProductService _orderService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRabbitMqService _rabbitMqService;
 
         public OrdersController(
             ILogger<OrdersController> logger,
-            IOrderRepository orderRepository,
+            IOrderProductService orderProductService,
             IMapper mapper,
-            IHttpContextAccessor httpContextAccessor,
-            IRabbitMqService rabbitMqService
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _logger = logger;
-            _orderRepo = orderRepository;
+            _orderService = orderProductService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
-            _rabbitMqService = rabbitMqService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> Get(CancellationToken cancellationToken)
         {
-            var products =  await _orderRepo.GetAllAsync(cancellationToken);
-            _rabbitMqService.SendMessage("order.text", "test message from order service", true);
+            var products =  await _orderService.GetOrdersAsync(cancellationToken);
             return Ok(products);
         }
 
@@ -51,7 +46,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var product =  await _orderRepo.GetByIdAsync(id, cancellationToken);
+                var product =  await _orderService.GetOrderByIdAsync(id, cancellationToken);
                 if (product is null)
                 {
                     return NotFound(new NotFoundResult());
@@ -79,7 +74,7 @@ namespace OrderService.Controllers
 
                 var newProduct = _mapper.Map<Order>(dto);
                 newProduct.OrderedBy = userEmail;
-                var createdProduct = await _orderRepo.CreateAsync(newProduct, dto.ProductIds, cancellationToken);
+                var createdProduct = await _orderService.CreateOrderAsync(newProduct, dto.ProductIds, cancellationToken);
                 return Ok(createdProduct);
             }
             catch (Exception e)
@@ -94,7 +89,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var updatedOrder = await _orderRepo.UpdateStatusOrderAsync(id, statusCode, cancellationToken);
+                var updatedOrder = await _orderService.UpdateOrderStatusAsync(id, statusCode, cancellationToken);
                 return Ok(updatedOrder);
             }
             catch (Exception e)
@@ -109,7 +104,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var updatedOrder = await _orderRepo.CancelOrderAsync(id, cancellationToken);
+                var updatedOrder = await _orderService.CancelOrderAsync(id, cancellationToken);
                 return Ok(updatedOrder);
             }
             catch (Exception e)
