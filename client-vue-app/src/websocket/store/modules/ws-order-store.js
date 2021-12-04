@@ -20,7 +20,6 @@ const wsOrder = {
 
         // Ready
         if(statusCode === 3){
-          console.log('no day')
           const notification = {message: `The Order #${orderId} is ready to pickup`}
           context.commit('UPSERT_NOTIFICATION', notification)
         }
