@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.SignalR;
+using SignalRService.Dtos;
 
 namespace SignalRService.Hubs;
 
 public interface ICommonHub
 {
     Task ReceiveMessage(string who, string message);
+    Task ChangeOrderStatus(OrderStatusChangedDto dto);
+    Task CreateNewOrder(OrderCreatedDto dto);
+    Task CancelOrderStatus(OrderStatusChangedDto dto);
+
     Task TestMessage(string message);
 }
 

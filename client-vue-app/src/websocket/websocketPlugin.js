@@ -1,5 +1,6 @@
-import websocketModule from '@/store/modules/ws-store'
 import signalRSingleton from '@/websocket/signalRSingleton'
+import wsModule from '@/websocket/store/modules/ws-store'
+import wsOrder from '@/websocket/store/modules/ws-order-store'
 
 export default {
   install(app) {
@@ -8,6 +9,7 @@ export default {
     const connectUrl = 'http://localhost:7200/realtime/commonHub'
     signalRSingleton.init(connectUrl)
     // Assign websocket store module
-    app.config.globalProperties.$store.registerModule('ws', websocketModule)
+    app.config.globalProperties.$store.registerModule('ws', wsModule)
+    app.config.globalProperties.$store.registerModule('wsStore', wsOrder)
   }
 }

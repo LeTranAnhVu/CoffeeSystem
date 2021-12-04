@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.SignalR;
 using RabbitMqServiceExtension.AsyncMessageService;
+using SignalRService.Dtos;
+using SignalRService.Hubs;
 
 namespace SignalRService.BackgroundServices;
 
@@ -6,11 +9,17 @@ public class OrderChangeSubscriber : BackgroundService
 {
     private readonly ILogger<OrderChangeSubscriber> _logger;
     private readonly IRabbitMqService _rabbitMqService;
+    private readonly IHubContext<CommonHub, ICommonHub> _hubContext;
 
-    public OrderChangeSubscriber(ILogger<OrderChangeSubscriber> logger, IRabbitMqService rabbitMqService)
+    public OrderChangeSubscriber(
+        ILogger<OrderChangeSubscriber> logger,
+        IRabbitMqService rabbitMqService,
+        IHubContext<CommonHub, ICommonHub> hubContext
+        )
     {
         _logger = logger;
         _rabbitMqService = rabbitMqService;
+        _hubContext = hubContext;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,9 +36,12 @@ public class OrderChangeSubscriber : BackgroundService
     {
         var topic = "order.created";
         _rabbitMqService.ReceiveMessageOnTopic(topic,
-            (OrderCreatedContract order) =>
+            (OrderCreatedDto order) =>
             {
                 _logger.LogInformation($"There is new order with Id: {order.OrderId} created by {order.OrderedBy}");
+
+                var sendGroup = "orders.create";
+                _hubContext.Clients.Group(sendGroup).CreateNewOrder(order);
             });
     }
 
@@ -37,9 +49,12 @@ public class OrderChangeSubscriber : BackgroundService
     {
         var topic = "order.cancelled";
         _rabbitMqService.ReceiveMessageOnTopic(topic,
-            (OrderStatusChangedContract order) =>
+            (OrderStatusChangedDto order) =>
             {
                 _logger.LogInformation($"The order with Id: {order.OrderId} is cancelled");
+
+                var sendGroup = "orders.cancel";
+                _hubContext.Clients.Group(sendGroup).ChangeOrderStatus(order);
             });
     }
 
@@ -47,30 +62,12 @@ public class OrderChangeSubscriber : BackgroundService
     {
         var topic = "order.updated.status";
         _rabbitMqService.ReceiveMessageOnTopic(topic,
-            (OrderStatusChangedContract order) =>
+            (OrderStatusChangedDto order) =>
             {
-                _logger.LogInformation($"The order with Id: {order.OrderId} is updated status to {order.StatusCode}");
+                _logger.LogInformation($"The order of {order.OrderedBy} with Id: {order.OrderId} is updated status to {order.StatusCode}");
+
+                var sendGroup = "orders." + order.OrderedBy;
+                _hubContext.Clients.Group(sendGroup).ChangeOrderStatus(order);
             });
     }
-}
-
-public class OrderCreatedContract
-{
-    public int OrderId { get; set; }
-    public string OrderedBy { get; set; }
-}
-
-public class OrderStatusChangedContract
-{
-    public int OrderId { get; set; }
-    public OrderStatusCode StatusCode { get; set; }
-    public string OrderedBy { get; set; }
-}
-
-public enum OrderStatusCode
-{
-    Ordered = 1,
-    Preparing,
-    Ready,
-    Cancelled
 }

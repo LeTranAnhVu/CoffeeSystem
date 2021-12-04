@@ -5,7 +5,7 @@
         <p>Brian's coffee</p>
       </template>
       <template #end>
-        <div class="p-d-flex">
+        <div class="p-d-flex p-ai-center">
           <Divider layout="vertical"/>
           <Button class="p-button-icon p-button-text p-button-danger" type="button" @click="toggle"
                   icon="pi pi-fw pi-shopping-cart">
@@ -15,6 +15,7 @@
           </OverlayPanel>
 
           <template v-if="isLogin">
+            <NotificationBadge></NotificationBadge>
             <Button class="p-button-text p-button-info" type="button" :label="userInfo.username" @click="openUserMenu"
                     aria-haspopup="true"
                     aria-controls="user_menu"/>
@@ -46,13 +47,13 @@ import Button from 'primevue/button'
 import Menu from 'primevue/menu'
 import Divider from 'primevue/divider'
 import OverlayPanel from 'primevue/overlaypanel'
-
 import LoginForm from '@/components/form/LoginForm'
 import RegisterForm from '@/components/form/RegisterForm'
 import CartList from '@/components/Cart/CartList'
 
 import {useStore} from 'vuex'
 import useLogout from '@/composables/useLogout'
+import NotificationBadge from '@/components/Notification/NotificationBadge'
 
 export default {
   name: 'Header',
@@ -60,7 +61,8 @@ export default {
     Menubar, Dialog, Button, Menu, Divider, OverlayPanel,
     LoginForm,
     RegisterForm,
-    CartList
+    CartList,
+    NotificationBadge
   },
 
   setup() {

@@ -1,4 +1,4 @@
-using OrderService.AsyncMessageContracts;
+using OrderService.AsyncMessageDtos;
 using OrderService.Constants;
 using OrderService.Models;
 using OrderService.Repositories;
@@ -22,7 +22,7 @@ public class OrderProductService : IOrderProductService
         CancellationToken cancellationToken = default)
     {
          var newOrder =  await _orderRepo.CreateAsync(order, productIds, cancellationToken);
-         var contract = new OrderCreatedContract() { OrderId = newOrder.Id, OrderedBy = newOrder.OrderedBy};
+         var contract = new OrderCreatedDto() { OrderId = newOrder.Id, OrderedBy = newOrder.OrderedBy};
          _mqService.SendMessage($"{_messageTopic}created", contract);
          return newOrder;
     }
@@ -40,7 +40,7 @@ public class OrderProductService : IOrderProductService
     public async Task<Order> CancelOrderAsync(int id, CancellationToken cancellationToken = default)
     {
         var updatedOrder = await _orderRepo.CancelOrderAsync(id, cancellationToken);
-        var contract = new OrderStatusChangedContract() { OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode};
+        var contract = new OrderStatusChangedDto() { OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode,  StatusName = updatedOrder.StatusName};
         _mqService.SendMessage($"{_messageTopic}cancelled", contract);
         return updatedOrder;
     }
@@ -49,7 +49,7 @@ public class OrderProductService : IOrderProductService
         CancellationToken cancellationToken = default)
     {
         var updatedOrder = await _orderRepo.UpdateStatusOrderAsync(id, statusCode, cancellationToken);
-        var contract = new OrderStatusChangedContract() { OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode};
+        var contract = new OrderStatusChangedDto() { OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode, StatusName = updatedOrder.StatusName };
         _mqService.SendMessage($"{_messageTopic}updated.status", contract);
         return updatedOrder;
 

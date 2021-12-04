@@ -10,6 +10,7 @@ const user = {
   state: () => ({
     user: createAnonymous(),
     isLogin: false,
+    triedLogin: false,
     showLoginForm: false
   }),
   mutations: {
@@ -27,6 +28,10 @@ const user = {
 
     SET_LOGIN_STATUS(state, isLogin) {
       state.isLogin = isLogin
+    },
+
+    TRIED_TO_LOGIN(state) {
+      state.triedLogin = true
     }
   },
   actions: {
@@ -44,8 +49,9 @@ const user = {
         saveAccessToken(accessToken)
       } catch (e) {
         await context.dispatch('logout')
+      } finally {
+        context.commit('TRIED_TO_LOGIN')
       }
-
     },
 
     async register(context, {username, email, password}) {
@@ -80,6 +86,8 @@ const user = {
         context.commit('SET_LOGIN_STATUS', true)
       } catch (e) {
         await context.dispatch('logout')
+      } finally {
+        context.commit('TRIED_TO_LOGIN')
       }
 
     },
@@ -100,8 +108,12 @@ const user = {
       return {...state.user}
     },
 
-    needToShowLoginForm(state){
+    needToShowLoginForm(state) {
       return state.showLoginForm
+    },
+
+    hasTriedLogin(state) {
+      return state.triedLogin
     }
   }
 }

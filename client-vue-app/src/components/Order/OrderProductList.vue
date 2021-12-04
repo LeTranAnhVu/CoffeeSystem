@@ -5,14 +5,29 @@
       <Divider/>
     </template>
     <template #content>
-      <template v-if="orders.length">
-        <div v-for="item in orders" :key="item.id">
-          <OrderItem :item="item"/>
-          <Divider/>
-        </div>
+      <template v-if="!isLoadingOrders">
+        <template v-if="orders.length">
+          <div>
+            <div v-for="item in orders" :key="item.id">
+              <OrderItem :order="item"/>
+              <Divider/>
+            </div>
+
+          </div>
+        </template>
+
+        <template v-else>
+          <span>Cart is empty</span>
+        </template>
       </template>
       <template v-else>
-        <span>Cart is empty</span>
+        <!--Skeleton-->
+        <div class="p-d-flex p-jc-between p-mb-2">
+          <Skeleton width="10rem"></Skeleton>
+          <Skeleton width="10rem"></Skeleton>
+        </div>
+        <Skeleton class="p-mb-2"></Skeleton>
+        <Skeleton width="10rem" class="p-mb-2"></Skeleton>
       </template>
     </template>
   </Card>
@@ -22,6 +37,7 @@
 import Card from 'primevue/card'
 import Divider from 'primevue/divider'
 import Button from 'primevue/button'
+import Skeleton from 'primevue/skeleton'
 import {useStore} from 'vuex'
 import OrderItem from '@/components/Order/OrderItem'
 import useOrder from '@/composables/useOrder'
@@ -31,7 +47,7 @@ import useProduct from '@/composables/useProduct'
 export default {
   name: 'OrderProductList',
   components: {
-    Card, Divider, Button,
+    Card, Divider, Button, Skeleton,
     OrderItem
   },
   props: {
@@ -42,15 +58,16 @@ export default {
   },
   setup() {
     const store = useStore()
-    const {orders, fetchOrders} = useOrder(store)
+    const {orders, fetchOrderNeeds, isLoadingOrders} = useOrder(store)
     const {fetchProducts} = useProduct(store)
 
     onMounted(async () => {
-      const fetches = [fetchOrders, fetchProducts]
+      const fetches = [fetchOrderNeeds, fetchProducts]
       await Promise.all(fetches.map(f => f()))
     })
     return {
-      orders
+      orders,
+      isLoadingOrders
     }
   },
 }

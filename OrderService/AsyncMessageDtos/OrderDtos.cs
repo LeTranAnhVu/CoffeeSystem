@@ -1,17 +1,18 @@
 using OrderService.Constants;
 
-namespace OrderService.AsyncMessageContracts;
+namespace OrderService.AsyncMessageDtos;
 
-public class OrderCreatedContract
+public class OrderCreatedDto
 {
     public int OrderId { get; set; }
     public string OrderedBy { get; set; }
 }
 
-public class OrderStatusChangedContract
+public class OrderStatusChangedDto
 {
     public int OrderId { get; set; }
     public OrderStatusCode StatusCode { get; set; }
+    public string StatusName { get; set; }
     public string OrderedBy { get; set; }
 }
 

@@ -113,5 +113,31 @@ namespace OrderService.Controllers
                 return NotFound(new NotFoundResult());
             }
         }
+
+        [HttpGet("statuses")]
+        public ActionResult<List<OrderStatusDto>> GetOrderStatuses()
+        {
+            var statuses = new List<OrderStatusDto>()
+            {
+                new (){
+                    Name = OrderStatus.Ordered,
+                    Code = OrderStatusCode.Ordered
+                },
+                new (){
+                    Name = OrderStatus.Preparing,
+                    Code = OrderStatusCode.Preparing
+                },
+                new (){
+                    Name = OrderStatus.Ready,
+                    Code = OrderStatusCode.Ready
+                },
+                new (){
+                    Name = OrderStatus.Cancelled,
+                    Code = OrderStatusCode.Cancelled
+                }
+            };
+
+            return statuses;
+        }
     }
 }

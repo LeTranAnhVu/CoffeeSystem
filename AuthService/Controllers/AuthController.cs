@@ -75,6 +75,7 @@ namespace AuthService.Controllers
         [HttpGet("validateToken")]
         public ActionResult<AuthResult> ValidateToken(CancellationToken cancellationToken)
         {
+            // await Task.Delay(10000);
             var user = _httpContextAccessor.HttpContext.User;
             var result = _identityService.ValidateToken(user);
             return Ok(result);
