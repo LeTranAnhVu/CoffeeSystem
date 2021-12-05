@@ -95,7 +95,7 @@ namespace OrderService.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return NotFound(new NotFoundResult());
+                return BadRequest(new BadRequestResult(e.Message));
             }
         }
 
@@ -110,7 +110,7 @@ namespace OrderService.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return NotFound(new NotFoundResult());
+                return BadRequest(new BadRequestResult(e.Message));
             }
         }
 

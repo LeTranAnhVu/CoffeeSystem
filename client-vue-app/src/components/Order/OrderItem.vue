@@ -31,7 +31,7 @@
           <Divider/>
         </div>
       </template>
-      <div  v-if="!isOrderCancelled" class="p-d-flex p-jc-end p-mt-5">
+      <div  v-if="!isOrderHandled" class="p-d-flex p-jc-end p-mt-5">
         <Button class="p-button-danger" label="Cancel Order" icon="pi pi-times-circle" @click="handleCancel" />
       </div>
     </template>
@@ -65,6 +65,7 @@ export default {
     const processStatuses = computed(() => orderStatuses.value.filter(status => status.code !== OrderCodes.Cancelled))
 
     const isOrderCancelled = computed(() => props.order.statusCode === OrderCodes.Cancelled)
+    const isOrderHandled = computed(() => props.order.statusCode !== OrderCodes.Ordered)
 
     const confirm = useConfirm();
     const handleCancel = () => {
@@ -85,7 +86,7 @@ export default {
     return {
       processStatuses,
       handleCancel,
-      isOrderCancelled
+      isOrderCancelled, isOrderHandled
     }
   },
 }

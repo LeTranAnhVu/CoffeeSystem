@@ -36,8 +36,10 @@
           <Divider/>
         </div>
       </template>
-      <div  v-if="!isOrderCancelled" class="p-d-flex p-jc-end p-mt-5">
+      <div  v-if="isNewOrder" class="p-d-flex p-jc-end p-mt-5">
         <Button class="p-button-info" label="Prepare Order" icon="pi pi-history" @click="handlePrepare" />
+      </div>
+      <div  v-else-if="isOrderPreparing" class="p-d-flex p-jc-end p-mt-5">
         <Button class="p-button-success p-ml-5" label="Ready to pick up" icon="pi pi-check-square" @click="handleReady" />
       </div>
     </template>
@@ -72,6 +74,9 @@ export default {
     const processStatuses = computed(() => orderStatuses.value.filter(status => status.code !== OrderCodes.Cancelled))
 
     const isOrderCancelled = computed(() => props.order.statusCode === OrderCodes.Cancelled)
+    const isOrderReady = computed(() => props.order.statusCode === OrderCodes.Ready)
+    const isNewOrder = computed(() => props.order.statusCode === OrderCodes.Ordered)
+    const isOrderPreparing = computed(() => props.order.statusCode === OrderCodes.Preparing)
 
     const confirm = useConfirm();
     const handleReady = () => {
@@ -110,7 +115,7 @@ export default {
       processStatuses,
       handleReady,
       handlePrepare,
-      isOrderCancelled,
+      isOrderCancelled, isOrderReady, isOrderPreparing, isNewOrder,
       formatFromNow
     }
   },
