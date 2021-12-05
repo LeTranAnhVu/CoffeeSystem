@@ -10,11 +10,10 @@ async function login(email, password) {
     body: JSON.stringify({email, password})
   })
 
-  const statusCode = response.statusCode
+  const statusCode = response.status
   if (statusCode === 400) {
     const failData = await response.json()
-    console.error(failData.message || 'login fail')
-    throw Error(failData.message || 'login fail')
+    throw new Error(failData.message || 'login fail')
   }
 
   return await response.json()
@@ -28,7 +27,7 @@ async function register(username, email, password) {
     body: JSON.stringify({username, email, password})
   })
 
-  const statusCode = response.statusCode
+  const statusCode = response.status
   if (statusCode === 400) {
     const failData = await response.json()
     console.error(failData.message || 'Bad request')
@@ -45,7 +44,7 @@ async function validateAccessToken(accessToken) {
     headers: createDefaultHeader()
   })
 
-  const statusCode = response.statusCode
+  const statusCode = response.status
   if (statusCode === 401) {
     return {succeeded: false}
   }

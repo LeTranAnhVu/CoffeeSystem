@@ -15,6 +15,32 @@ export async function fetchOrders() {
   }
 }
 
+export async function fetchOrderById(id) {
+  try {
+    const api = `/orders/${id}`
+    const response = await fetch(baseUrl + api, {
+      method: 'GET',
+      headers: createDefaultHeader()
+    })
+    return await response.json()
+  } catch (e) {
+    return null
+  }
+}
+
+export async function fetchOrderStatuses() {
+  try {
+    const api = '/orders/statuses'
+    const response = await fetch(baseUrl + api, {
+      method: 'GET',
+      headers: createDefaultHeader()
+    })
+    return await response.json()
+  } catch (e) {
+    return []
+  }
+}
+
 export async function createOrder(order) {
   const api = '/orders'
   const response = await fetch(baseUrl + api, {
@@ -25,7 +51,19 @@ export async function createOrder(order) {
   return await response.json()
 }
 
+export async function updateOrderStatus(orderId, statusCode) {
+  const api = `/orders/${orderId}/updatestatus/${statusCode}`
+  const response = await fetch(baseUrl + api, {
+    method: 'PATCH',
+    headers: createDefaultHeader(),
+  })
+  return await response.json()
+}
+
 export default {
   createOrder,
-  fetchOrders
+  fetchOrders,
+  fetchOrderById,
+  fetchOrderStatuses,
+  updateOrderStatus
 }

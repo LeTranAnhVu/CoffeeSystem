@@ -42,7 +42,7 @@ namespace OrderService.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Order>> GetProductById(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<Order>> GetOrderById(int id, CancellationToken cancellationToken)
         {
             try
             {

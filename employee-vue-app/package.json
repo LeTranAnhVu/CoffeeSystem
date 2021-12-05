@@ -10,10 +10,12 @@
   "dependencies": {
     "@microsoft/signalr": "^6.0.0",
     "core-js": "^3.6.5",
+    "moment": "^2.29.1",
     "primeflex": "2.0.0",
     "primeicons": "^5.0.0",
     "primevue": "^3.9.1",
     "roboto-fontface": "*",
+    "uuid": "^8.3.2",
     "vue": "^3.0.0",
     "vue-router": "4",
     "vuex": "^4.0.2"

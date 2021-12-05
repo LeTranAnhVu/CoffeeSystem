@@ -47,6 +47,7 @@ import Divider from 'primevue/divider'
 import Card from 'primevue/card'
 import useOrder from '@/composables/useOrder'
 import {useConfirm} from 'primevue/useconfirm'
+import {OrderCodes} from '@/Constants'
 
 export default {
   name: 'OrderItem',
@@ -61,9 +62,9 @@ export default {
   setup(props) {
     const {orderStatuses, cancelOrder} = useOrder()
     // Filter the cancel status
-    const processStatuses = computed(() => orderStatuses.value.filter(status => status.code !== 4))
+    const processStatuses = computed(() => orderStatuses.value.filter(status => status.code !== OrderCodes.Cancelled))
 
-    const isOrderCancelled = computed(() => props.order.statusCode === 4)
+    const isOrderCancelled = computed(() => props.order.statusCode === OrderCodes.Cancelled)
 
     const confirm = useConfirm();
     const handleCancel = () => {

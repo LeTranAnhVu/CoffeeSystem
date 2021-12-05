@@ -1,5 +1,6 @@
 import methodContracts from '@/websocket/methodContracts'
 import {joinGroup, listenTo} from '@/websocket/helpers/groupHelper'
+import {OrderCodes} from '@/Constants'
 
 const wsOrder = {
   actions: {
@@ -19,7 +20,7 @@ const wsOrder = {
         context.commit('UPDATE_ORDER_STATUS', {id: orderId, statusCode, statusName })
 
         // Ready
-        if(statusCode === 3){
+        if(statusCode === OrderCodes.Ready){
           const notification = {message: `The Order #${orderId} is ready to pickup`}
           context.commit('UPSERT_NOTIFICATION', notification)
         }

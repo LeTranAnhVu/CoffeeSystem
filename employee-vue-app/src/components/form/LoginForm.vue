@@ -36,6 +36,7 @@ export default {
     const {login} = useLogin()
     const handleLogin = async () => {
       await login(email.value, password.value)
+      console.log('its still here')
       emit('login-done')
     }
     return {

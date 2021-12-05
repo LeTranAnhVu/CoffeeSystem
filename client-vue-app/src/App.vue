@@ -43,7 +43,7 @@ export default {
     const store = useStore()
     onMounted(async () => {
       const env = process.env.VUE_APP_TITLE_INFO
-      document.title = `${env} - Brian's coffee Client App`
+      document.title = `${env} - Brian's coffee Employee App`
       await checkUserLogin()
       await store.dispatch('listenToTestMessage')
     })

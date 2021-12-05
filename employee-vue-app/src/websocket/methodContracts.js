@@ -2,5 +2,7 @@
 export default {
   JoinGroup: 'JoinGroup',
   LeaveGroup: 'LeaveGroup',
-  TestMessage: 'TestMessage'
+  TestMessage: 'TestMessage',
+  ChangeOrderStatus: 'ChangeOrderStatus',
+  CreateNewOrder: 'CreateNewOrder'
 }
