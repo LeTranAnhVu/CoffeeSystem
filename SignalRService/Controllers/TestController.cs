@@ -4,7 +4,7 @@ using SignalRService.Hubs;
 
 namespace SignalRService.Controllers;
 
-[Route("/realtime/api/[controller]")]
+[Route("/api/signalr/[controller]")]
 [ApiController]
 public class TestController : ControllerBase
 {

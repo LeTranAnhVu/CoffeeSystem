@@ -3,6 +3,7 @@ using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Models;
 using OrderService.Repositories;
+using OrderService.SeedData;
 using OrderService.Services.OrderProductService;
 using OrderService.Services.ProductService;
 using RabbitMqServiceExtension;
@@ -13,11 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    // options.UseInMemoryDatabase("Test");
-    options.UseSqlite("Filename=Order.db", options =>
-    {
-        options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-    });
+// #if DEBUG
+//     Console.WriteLine("---> Using Sqlite DB");
+//     options.UseSqlite("Filename=Order.db",
+//         options => { options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName); });
+//
+// #else
+    Console.WriteLine("---> Using MSSQL DB");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PlatformsConn"));
+// #endif
 });
 
 builder.Services.AddAuthService(builder.Configuration);
@@ -63,5 +68,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+PrepDb.PrepPopulation(app, app.Environment.IsProduction());
 
 app.Run();

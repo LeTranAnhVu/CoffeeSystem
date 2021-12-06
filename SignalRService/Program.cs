@@ -49,7 +49,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+
 app.UseCors(MyAllowSpecificOrigins);
+
 app.MapControllers();
-app.MapHub<CommonHub>("/realtime/commonHub");
+app.MapHub<CommonHub>("/api/signalr/commonHub");
 app.Run();

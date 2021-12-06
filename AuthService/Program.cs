@@ -15,6 +15,20 @@ var configuration = builder.Configuration;
 var services = builder.Services;
 // Add services to the container.
 services.AddControllers();
+// CORS
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        configurePolicy =>
+        {
+            var origins = builder.Configuration.GetSection("Cors").Value.Split(";");
+            configurePolicy.WithOrigins(origins)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+});
 
 // DATABASE
 services.AddDbContext<AppDbContext>(options =>
@@ -70,6 +84,7 @@ services.AddScoped<IIdentityService, IdentityService>();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
