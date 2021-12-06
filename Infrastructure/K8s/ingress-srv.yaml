@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  labels:
+    name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-methods: 'GET, PUT, POST, DELETE, PATCH, OPTIONS'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-SignalR-User-Agent'
+    nginx.ingress.kubernetes.io/cors-allow-origin: 'http://clientapp.coffeesystem.com, http://employeeapp.coffeesystem.com'
+spec:
+  rules:
+  - host: api.coffeesystem.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: apigateway-srv
+            port: 
+              number: 80
+
+  - host: clientapp.coffeesystem.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: clientapp-srv
+            port: 
+              number: 80
+
+  - host: employeeapp.coffeesystem.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: employeeapp-srv
+            port: 
+              number: 80

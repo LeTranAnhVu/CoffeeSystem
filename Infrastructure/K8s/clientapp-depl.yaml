@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clientapp-depl
+spec:
+  selector:
+    matchLabels:
+      app: clientapp
+  template:
+    metadata:
+      labels:
+        app: clientapp
+    spec:
+      containers:
+      - name: coffeesystem-clientapp
+        image: letrananhvu/coffeesystem.clientapp:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clientapp-srv
+spec:
+  selector:
+    app: clientapp
+  ports:
+  - port: 80
+    targetPort: 80

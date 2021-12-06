@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productservice-depl
+spec:
+  selector:
+    matchLabels:
+      app: productservice
+  template:
+    metadata:
+      labels:
+        app: productservice
+    spec:
+      containers:
+      - name: coffeesystem-productservice
+        image: letrananhvu/coffeesystem.productservice:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: productservice 
+  ports:
+  - port: 80
+    targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-np-srv
+spec:
+  type: NodePort
+  selector:
+    app: productservice 
+  ports:
+  - port: 80
+    targetPort: 80
+
