@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: orderservicedb-pvc
+spec:
+  storageClassName: "local-path" # <--- A PV with no storageClassName has no class and can only be bound to PVCs that request no particular class.
+  volumeName: coffeesystem-pv
+  resources:
+    requests:
+      storage: 200Mi
+  accessModes:
+    - ReadWriteMany
