@@ -32,7 +32,7 @@ spec:
       volumes:
         - name: mssqldb
           persistentVolumeClaim:
-            claimName: mssql-claim
+            claimName: orderservicedb-pvc
 
 ---
 apiVersion: v1
