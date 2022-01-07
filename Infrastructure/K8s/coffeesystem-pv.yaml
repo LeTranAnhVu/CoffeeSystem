@@ -1,0 +1,32 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: coffeesystem-pv
+  labels:
+    name: coffeesystem-pv
+spec:
+  capacity:
+    storage: 700Mi
+  # A PV can have a class, which is specified by setting the `storageClassName` attribute to the name of a StorageClass. 
+  # A PV of a particular class can only be bound to PVCs requesting that class. 
+  # A PV with no storageClassName has no class and can only be bound to PVCs that request no particular class.
+  storageClassName: "local-path"
+  persistentVolumeReclaimPolicy: Retain # Delete -- associated storage asset such as AWS EBS, GCE PD, Azure Disk, or OpenStack Cinder volume is deleted
+  accessModes:
+    - ReadWriteMany
+  local:
+    path: "/mnt/disks/vol1" # <--- need to create manually
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k3s-node-02
+
+  # hostPath:
+    # path: "/opt/volume/nginx"
+  # claimRef:
+  #   name: orderservicedb-pvc
+  #   namespace: coffee-system
