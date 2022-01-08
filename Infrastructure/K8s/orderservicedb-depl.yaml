@@ -11,6 +11,8 @@ spec:
       labels:
         app: orderdb
     spec:
+      nodeSelector: # use to test nfs server can work on different nodes
+        kubernetes.io/hostname: k3s-node-01
       containers:
         - name: orderdb-mssql
           image: mcr.microsoft.com/mssql/server:2017-latest
