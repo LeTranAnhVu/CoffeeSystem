@@ -22,14 +22,22 @@ public class OrderChangeSubscriber : BackgroundService
         _hubContext = hubContext;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         stoppingToken.ThrowIfCancellationRequested();
-        _logger.LogInformation("Start subscribe to Rabbit MQ, on Order change");
-        OnOrderCreated();
-        OnOrderCancelled();
-        OnOrderUpdatedStatus();
-        return Task.CompletedTask;
+        try
+        {
+            _logger.LogInformation("Start subscribe to Rabbit MQ, on Order change");
+            await _rabbitMqService.TryToCreateConnection();
+            OnOrderCreated();
+            OnOrderCancelled();
+            OnOrderUpdatedStatus();
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning("Cannot start to receive Rabbitmq message");
+            _logger.LogWarning(e.Message);
+        }
     }
 
     private void OnOrderCreated()

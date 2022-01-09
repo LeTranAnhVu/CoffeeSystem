@@ -7,7 +7,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace RabbitMqServiceExtension.AsyncMessageService;
-
+[Obsolete("RabbitMqNotWorkingService is deprecated")]
 public class RabbitMqNotWorkingService : RabbitMqService, IRabbitMqService, IDisposable
 {
     private readonly ILogger<RabbitMqNotWorkingService> _logger;

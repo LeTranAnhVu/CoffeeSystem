@@ -20,17 +20,9 @@ public static class RabbitMqServiceExtension
 
         services.AddSingleton<IRabbitMqService, RabbitMqService>(provider =>
         {
-            try
-            {
-                var logger = provider.GetRequiredService<ILogger<RabbitMqService>>();
-                var options = provider.GetRequiredService<IOptions<RabbitMqSettings>>();
-                return new RabbitMqService(logger, options);
-            }
-            catch (Exception e)
-            {
-                var logger = provider.GetRequiredService<ILogger<RabbitMqNotWorkingService>>();
-                return new RabbitMqNotWorkingService(logger);
-            }
+            var logger = provider.GetRequiredService<ILogger<RabbitMqService>>();
+            var options = provider.GetRequiredService<IOptions<RabbitMqSettings>>();
+            return new RabbitMqService(logger, options);
         });
         return services;
     }
