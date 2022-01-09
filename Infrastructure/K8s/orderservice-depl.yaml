@@ -16,6 +16,11 @@ spec:
         image: letrananhvu/coffeesystem.orderservice:latest
         ports:
         - containerPort: 80
+      
+      initContainers:
+      - name: init-db # Wait until the order db is deploy.
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup orderdb-srv.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo \"waiting for orderdb to start\"; sleep 2; done"]
 
 ---
 apiVersion: v1
