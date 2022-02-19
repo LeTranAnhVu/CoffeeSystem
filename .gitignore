@@ -7,3 +7,4 @@ riderModule.iml
 *.db-*
 **/*.Production.json
 Infrastructure/K8s/script.sh
+.idea
