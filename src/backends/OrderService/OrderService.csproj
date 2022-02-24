@@ -21,7 +21,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuthForServicesExtension\AuthForServicesExtension.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\RabbitMqServiceExtension\RabbitMqServiceExtension.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Constants" />
   </ItemGroup>
 
 </Project>

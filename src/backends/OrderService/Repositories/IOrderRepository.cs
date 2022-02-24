@@ -1,4 +1,4 @@
-using OrderService.Constants;
+using Domain.Constants;
 using OrderService.Models;
 
 namespace OrderService.Repositories;

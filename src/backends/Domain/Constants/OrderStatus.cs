@@ -1,4 +1,4 @@
-namespace OrderService.Constants;
+namespace Domain.Constants;
 
 public static class OrderStatus
 {

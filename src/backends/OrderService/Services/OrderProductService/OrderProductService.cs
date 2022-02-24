@@ -1,5 +1,5 @@
+using Domain.Constants;
 using OrderService.AsyncMessageDtos;
-using OrderService.Constants;
 using OrderService.Exceptions;
 using OrderService.Models;
 using OrderService.Repositories;

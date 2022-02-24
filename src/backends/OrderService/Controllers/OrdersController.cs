@@ -1,12 +1,11 @@
 using System.Security.Claims;
 using AutoMapper;
+using Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Constants;
 using OrderService.Dtos;
 using OrderService.Models;
 using OrderService.Services.OrderProductService;
-using RabbitMqServiceExtension.AsyncMessageService;
 using NotFoundResult = OrderService.FailResults.NotFoundResult;
 using BadRequestResult = OrderService.FailResults.BadRequestResult;
 namespace OrderService.Controllers

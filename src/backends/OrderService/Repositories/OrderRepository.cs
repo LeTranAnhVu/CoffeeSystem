@@ -1,5 +1,5 @@
+using Domain.Constants;
 using Microsoft.EntityFrameworkCore;
-using OrderService.Constants;
 using OrderService.Exceptions;
 using OrderService.ExternalModels;
 using OrderService.Models;

@@ -1,3 +1,5 @@
+using Domain.Constants;
+
 namespace SignalRService.Dtos;
 public class OrderCreatedDto
 {
@@ -11,12 +13,4 @@ public class OrderStatusChangedDto
     public OrderStatusCode StatusCode { get; set; }
     public string StatusName { get; set; }
     public string OrderedBy { get; set; }
-}
-
-public enum OrderStatusCode
-{
-    Ordered = 1,
-    Preparing,
-    Ready,
-    Cancelled
 }

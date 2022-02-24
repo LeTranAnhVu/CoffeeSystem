@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using OrderService.Constants;
-
+using Domain.Constants;
 namespace OrderService.Models;
 
 public class Order

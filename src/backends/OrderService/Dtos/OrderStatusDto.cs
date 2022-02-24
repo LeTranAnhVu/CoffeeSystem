@@ -1,4 +1,4 @@
-using OrderService.Constants;
+using Domain.Constants;
 
 namespace OrderService.Dtos;
 
