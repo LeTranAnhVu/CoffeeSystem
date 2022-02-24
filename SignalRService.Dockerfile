@@ -3,15 +3,15 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY ["SignalRService/SignalRService.csproj", "SignalRService/"]
-COPY ["AuthForServicesExtension/AuthForServicesExtension.csproj", "AuthForServicesExtension/"]
-COPY ["RabbitMqServiceExtension/RabbitMqServiceExtension.csproj", "RabbitMqServiceExtension/"]
+COPY ["src/backends/SignalRService/SignalRService.csproj", "SignalRService/"]
+COPY ["src/backends/AuthForServicesExtension/AuthForServicesExtension.csproj", "AuthForServicesExtension/"]
+COPY ["src/backends/RabbitMqServiceExtension/RabbitMqServiceExtension.csproj", "RabbitMqServiceExtension/"]
 RUN dotnet restore "SignalRService/SignalRService.csproj"
 
 # Copy everything else and build
-COPY SignalRService/ SignalRService/
-COPY AuthForServicesExtension/ AuthForServicesExtension/
-COPY RabbitMqServiceExtension/ RabbitMqServiceExtension/
+COPY src/backends/SignalRService/ SignalRService/
+COPY src/backends/AuthForServicesExtension/ AuthForServicesExtension/
+COPY src/backends/RabbitMqServiceExtension/ RabbitMqServiceExtension/
 WORKDIR /app/SignalRService
 RUN dotnet publish "SignalRService.csproj" -c Release -o out
 

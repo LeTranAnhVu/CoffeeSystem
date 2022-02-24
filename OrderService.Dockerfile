@@ -3,16 +3,16 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY ["OrderService/OrderService.csproj", "OrderService/"]
-COPY ["AuthForServicesExtension/AuthForServicesExtension.csproj", "AuthForServicesExtension/"]
-COPY ["RabbitMqServiceExtension/RabbitMqServiceExtension.csproj", "RabbitMqServiceExtension/"]
+COPY ["src/backends/OrderService/OrderService.csproj", "OrderService/"]
+COPY ["src/backends/AuthForServicesExtension/AuthForServicesExtension.csproj", "AuthForServicesExtension/"]
+COPY ["src/backends/RabbitMqServiceExtension/RabbitMqServiceExtension.csproj", "RabbitMqServiceExtension/"]
 
 RUN dotnet restore "OrderService/OrderService.csproj"
 
 # Copy everything else and build
-COPY OrderService/ OrderService/
-COPY AuthForServicesExtension/ AuthForServicesExtension/
-COPY RabbitMqServiceExtension/ RabbitMqServiceExtension/
+COPY src/backends/OrderService/ OrderService/
+COPY src/backends/AuthForServicesExtension/ AuthForServicesExtension/
+COPY src/backends/RabbitMqServiceExtension/ RabbitMqServiceExtension/
 
 WORKDIR /app/OrderService
 RUN dotnet publish "OrderService.csproj" -c Release -o out

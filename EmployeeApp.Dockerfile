@@ -1,9 +1,9 @@
 # build stage
 FROM node:14.18.1-alpine3.12 as build-stage
 WORKDIR /app
-COPY employee-vue-app/package*.json ./
+COPY src/backends/employee-vue-app/package*.json ./
 RUN npm install
-COPY employee-vue-app/ .
+COPY src/backends/employee-vue-app/ .
 RUN npm run build
 
 # production stage

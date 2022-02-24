@@ -3,13 +3,13 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY ["ApiGateWay/ApiGateWay.csproj", "ApiGateWay/"]
-COPY ["AuthForServicesExtension/AuthForServicesExtension.csproj", "AuthForServicesExtension/"]
+COPY ["src/backends/ApiGateWay/ApiGateWay.csproj", "ApiGateWay/"]
+COPY ["src/backends/AuthForServicesExtension/AuthForServicesExtension.csproj", "AuthForServicesExtension/"]
 RUN dotnet restore "ApiGateWay/ApiGateWay.csproj"
 
 # Copy everything else and build
-COPY ApiGateWay/ ApiGateWay/
-COPY AuthForServicesExtension/ AuthForServicesExtension/
+COPY src/backends/ApiGateWay/ ApiGateWay/
+COPY src/backends/AuthForServicesExtension/ AuthForServicesExtension/
 WORKDIR /app/ApiGateWay
 RUN dotnet publish "ApiGateWay.csproj" -c Release -o out
 

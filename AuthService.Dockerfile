@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY ["AuthService/AuthService.csproj", "AuthService/"]
+COPY ["src/backends/AuthService/AuthService.csproj", "AuthService/"]
 RUN dotnet restore "AuthService/AuthService.csproj"
 
 # Copy everything else and build
-COPY AuthService/ AuthService/
+COPY src/backends/AuthService/ AuthService/
 WORKDIR /app/AuthService
 RUN dotnet publish "AuthService.csproj" -c Release -o out
 
