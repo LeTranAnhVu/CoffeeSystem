@@ -33,7 +33,6 @@ public class OrderRepository : IOrderRepository
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            order.StatusCode = OrderStatusCode.Ordered;
             order.OrderedAt = DateTime.UtcNow;
             await _context.Orders.AddAsync(order, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);

@@ -25,6 +25,7 @@ public class OrderProductService : IOrderProductService
     public async Task<Order> CreateOrderAsync(Order order, IReadOnlyList<int> productIds,
         CancellationToken cancellationToken = default)
     {
+        order.StatusCode = OrderStatusCode.Created;
         var newOrder = await _orderRepo.CreateAsync(order, productIds, cancellationToken);
         var contract = new OrderCreatedDto() { OrderId = newOrder.Id, OrderedBy = newOrder.OrderedBy };
         try
