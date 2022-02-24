@@ -2,6 +2,8 @@ namespace Domain.Constants;
 
 public static class OrderStatus
 {
+    public const string Created = "Created";
+    public const string Paid = "Paid";
     public const string Ordered = "Ordered";
     public const string Preparing = "Preparing";
     public const string Ready = "Ready";
@@ -10,7 +12,9 @@ public static class OrderStatus
 
 public enum OrderStatusCode
 {
-    Ordered = 1,
+    Created = 1,
+    Paid,
+    Ordered,
     Preparing,
     Ready,
     Cancelled
