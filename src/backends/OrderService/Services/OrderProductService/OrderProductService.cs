@@ -1,4 +1,5 @@
 using Domain.Constants;
+using Microsoft.AspNetCore.Authorization;
 using OrderService.AsyncMessageDtos;
 using OrderService.Exceptions;
 using OrderService.Models;
@@ -54,28 +55,69 @@ public class OrderProductService : IOrderProductService
     public async Task<Order> CancelOrderAsync(int id, CancellationToken cancellationToken = default)
     {
         // Validate status condition
-        // Cannot be cancel if order is not Ordered anymore.
         var existOrder = await _orderRepo.GetByIdAsync(id, cancellationToken);
         if (existOrder is null)
         {
             throw new OrderNotFoundException(id);
         }
 
-        if (existOrder.StatusCode != OrderStatusCode.Ordered)
+        // Existed order cannot be cancel if it has already paid
+        if (existOrder.StatusCode > OrderStatusCode.Created)
         {
-            // Cannot cancel
             throw new OrderCannotCancelException(id);
         }
 
         var updatedOrder = await _orderRepo.CancelOrderAsync(id, cancellationToken);
         var contract = new OrderStatusChangedDto()
         {
-            OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode,
+            OrderId = updatedOrder.Id,
+            OrderedBy = updatedOrder.OrderedBy,
+            StatusCode = updatedOrder.StatusCode,
             StatusName = updatedOrder.StatusName
         };
         try
         {
             _mqService.SendMessage($"{_messageTopic}cancelled", contract);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning("cannot sent message to RabbitMq");
+            _logger.LogWarning(e.Message);
+        }
+
+        return updatedOrder;
+    }
+
+    public async Task<Order> UpdateToNextOrderStatusAsync(int id, CancellationToken cancellationToken = default)
+    {
+        // Validate status condition
+        var existOrder = await _orderRepo.GetByIdAsync(id, cancellationToken);
+        if (existOrder is null)
+        {
+            throw new OrderNotFoundException(id);
+        }
+
+        // Existed order cannot be cancel if it has already paid
+        if (existOrder.StatusCode == OrderStatusCode.Cancelled)
+        {
+            _logger.LogInformation("Don't change the status when current status is 'Cancelled'");
+            return existOrder;
+        }
+
+        var nextStatus = existOrder.StatusCode++;
+
+        var updatedOrder = await _orderRepo.UpdateStatusOrderAsync(id, nextStatus, cancellationToken);
+        var contract = new OrderStatusChangedDto()
+        {
+            OrderId = updatedOrder.Id,
+            OrderedBy = updatedOrder.OrderedBy,
+            StatusCode = updatedOrder.StatusCode,
+            StatusName = updatedOrder.StatusName
+        };
+
+        try
+        {
+            _mqService.SendMessage($"{_messageTopic}updated.status", contract);
         }
         catch (Exception e)
         {
@@ -92,9 +134,12 @@ public class OrderProductService : IOrderProductService
         var updatedOrder = await _orderRepo.UpdateStatusOrderAsync(id, statusCode, cancellationToken);
         var contract = new OrderStatusChangedDto()
         {
-            OrderId = updatedOrder.Id, OrderedBy = updatedOrder.OrderedBy, StatusCode = updatedOrder.StatusCode,
+            OrderId = updatedOrder.Id,
+            OrderedBy = updatedOrder.OrderedBy,
+            StatusCode = updatedOrder.StatusCode,
             StatusName = updatedOrder.StatusName
         };
+
         try
         {
             _mqService.SendMessage($"{_messageTopic}updated.status", contract);

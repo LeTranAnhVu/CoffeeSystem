@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
 using Domain.Constants;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Dtos;
 using OrderService.Models;
@@ -66,8 +65,8 @@ namespace OrderService.Controllers
             try
             {
                 // Get user
-                var user = _httpContextAccessor.HttpContext.User;
-                var userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+                var user = _httpContextAccessor.HttpContext?.User;
+                var userEmail = user?.FindFirst(ClaimTypes.Email)?.Value;
 
                 if (string.IsNullOrWhiteSpace(userEmail)) return Unauthorized();
 
@@ -98,6 +97,21 @@ namespace OrderService.Controllers
             }
         }
 
+        [HttpPatch("{id}/update-to-next-status")]
+        public async Task<ActionResult<Order>> UpdateToNextStatus(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var updatedOrder = await _orderService.UpdateToNextOrderStatusAsync(id, cancellationToken);
+                return Ok(updatedOrder);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest(new BadRequestResult(e.Message));
+            }
+        }
+
         [HttpPatch("{id}/cancel")]
         public async Task<ActionResult<Order>> CancelOrder(int id, CancellationToken cancellationToken)
         {
@@ -118,6 +132,10 @@ namespace OrderService.Controllers
         {
             var statuses = new List<OrderStatusDto>()
             {
+                new (){
+                    Name = OrderStatus.Created,
+                    Code = OrderStatusCode.Created
+                },
                 new (){
                     Name = OrderStatus.Ordered,
                     Code = OrderStatusCode.Ordered
