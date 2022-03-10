@@ -10,7 +10,8 @@
       </Button>
       <template v-else>
         <div class="p-d-flex p-ai-center">
-          <Button iconPos="right" label="Ordered" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" @click="handleDeleteFromCart" />
+          <Button iconPos="right" label="Ordered" icon="pi pi-times"
+                  class="p-button-rounded p-button-danger p-button-text" @click="handleDeleteFromCart"/>
         </div>
       </template>
     </div>
@@ -20,7 +21,7 @@
 <script>
 import Button from 'primevue/button'
 import {useStore} from 'vuex'
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import useCart from '@/composables/useCart'
 
 export default {

@@ -1,4 +1,5 @@
 const baseUrl = process.env.VUE_APP_BASE_URL
+
 export async function fetchProducts() {
   try {
     const api = '/products'

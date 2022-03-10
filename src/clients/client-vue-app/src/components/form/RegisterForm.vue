@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="p-d-flex p-jc-end p-mt-5">
-      <Button class="p-button-warning" label="Create new user" icon="pi pi-plus" @click="handleRegister" />
+      <Button class="p-button-warning" label="Create new user" icon="pi pi-plus" @click="handleRegister"/>
     </div>
   </div>
 </template>

@@ -2,12 +2,12 @@
   <Card>
     <template #title>
       <h2>Products</h2>
-      <Divider />
+      <Divider/>
     </template>
     <template #content>
       <div v-for="item in products" :key="item.id">
         <ProductItem :product="item"/>
-        <Divider />
+        <Divider/>
       </div>
     </template>
   </Card>
@@ -17,9 +17,7 @@
 import Card from 'primevue/card'
 import Divider from 'primevue/divider'
 import ProductItem from './ProductItem'
-import {onMounted, ref} from 'vue'
-import {getProducts} from '@/api/products'
-import useCart from '@/composables/useCart'
+import {onMounted} from 'vue'
 import {useStore} from 'vuex'
 import useProduct from '@/composables/useProduct'
 

@@ -1,7 +1,8 @@
 <template>
   <div>
     <Button class="p-button-icon p-button-text" type="button" @click="toggle">
-      <i class="pi pi-bell p-text-secondary" style="font-size: 1.5rem" v-badge="notifications.length ? notifications.length : 0 "></i>
+      <i class="pi pi-bell p-text-secondary" style="font-size: 1.5rem"
+         v-badge="notifications.length ? notifications.length : 0 "></i>
     </Button>
     <OverlayPanel ref="op" :showCloseIcon="true" style="width: 650px" :breakpoints="{'960px': '75vw'}">
       <NotificationList/>

@@ -1,6 +1,8 @@
 export const OrderCodes = {
-  Ordered: 1,
-  Preparing: 2,
-  Ready : 3,
-  Cancelled: 4
+  Created: 1,
+  Paid: 2,
+  Ordered: 3,
+  Preparing: 4,
+  Ready: 5,
+  Cancelled: 6
 }

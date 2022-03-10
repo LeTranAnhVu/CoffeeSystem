@@ -34,10 +34,10 @@ class SignalRSingleton {
   init(connectUrl) {
     console.log('start createSignalrConnection')
     const connection = new HubConnectionBuilder()
-      .withUrl(connectUrl)
-      .configureLogging(LogLevel.Information)
-      .withAutomaticReconnect()
-      .build()
+        .withUrl(connectUrl)
+        .configureLogging(LogLevel.Information)
+        .withAutomaticReconnect()
+        .build()
     let startedPromise = null
 
     async function start() {
@@ -47,7 +47,7 @@ class SignalRSingleton {
       } catch (err) {
         console.error('Failed to connect with hub', err)
         return new Promise((resolve, reject) =>
-          setTimeout(() => start().then(resolve).catch(reject), 5000))
+            setTimeout(() => start().then(resolve).catch(reject), 5000))
       }
 
       return startedPromise

@@ -1,4 +1,4 @@
-import {computed, onMounted} from 'vue'
+import {computed} from 'vue'
 import {useStore} from 'vuex'
 
 export default function useCart(store) {
@@ -10,7 +10,7 @@ export default function useCart(store) {
 
   const makeOrderFromCart = async () => {
     const cartItemsValue = cartItems.value
-    if(!cartItemsValue.length) return
+    if (!cartItemsValue.length) return
 
     // Prepare order dto
     // e.g { productIds: [1,2,3] }

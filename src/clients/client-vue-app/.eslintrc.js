@@ -1,18 +1,18 @@
 module.exports = {
-  "root": true,
-  "env": {
-    "node": true
+  'root': true,
+  'env': {
+    'node': true
   },
-  "extends": [
-    "plugin:vue/vue3-essential",
-    "eslint:recommended"
+  'extends': [
+    'plugin:vue/vue3-essential',
+    'eslint:recommended'
   ],
-  "parserOptions": {
-    "parser": "babel-eslint"
+  'parserOptions': {
+    'parser': 'babel-eslint'
   },
   rules: {
-    "no-unused-vars": "off",
-    "vue/no-unused-components": "off"
+    'no-unused-vars': 'off',
+    'vue/no-unused-components': 'off'
   },
   // extends: [
   //   'eslint:recommended',

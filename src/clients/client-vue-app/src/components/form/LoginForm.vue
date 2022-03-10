@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="p-d-flex p-jc-end p-mt-5">
-      <Button class="p-button-warning" label="Login" icon="pi pi-check" @click="handleLogin" />
+      <Button class="p-button-warning" label="Login" icon="pi pi-check" @click="handleLogin"/>
     </div>
   </div>
 

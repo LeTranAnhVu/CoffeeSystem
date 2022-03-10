@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid'
 
 const notification = {
   state: () => ({
@@ -11,7 +11,7 @@ const notification = {
       // {id: uuid, message: '', link?: '', sentAt: date}
       const {id, message, link, sentAt} = notification
       if (message) {
-        if(id) {
+        if (id) {
           const idx = state.notifications.findIndex(savedItem => savedItem.id === id)
           if (idx !== -1) {
             // Exits
@@ -21,13 +21,13 @@ const notification = {
           notification.id = uuid()
           notification.sentAt = sentAt || Date.now()
           // Newest information is on top of the list.
-          state.notifications = [notification,...state.notifications]
+          state.notifications = [notification, ...state.notifications]
         }
       }
 
       // Check the queue size
       // If it exceeds, then pop the oldest one.
-      while(notification.length > state.queueSize) {
+      while (notification.length > state.queueSize) {
         notification.pop()
       }
     },

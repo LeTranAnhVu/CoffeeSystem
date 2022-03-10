@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^6.0.0",
+    "@stripe/stripe-js": "^1.24.0",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "primeflex": "2.0.0",

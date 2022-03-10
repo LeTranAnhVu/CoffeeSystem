@@ -45,7 +45,7 @@ export default {
     const store = useStore()
     const {cartItems, getCartById, updateToCart, makeOrderFromCart} = useCart(store)
     const handleMakeOrder = async () => {
-     await makeOrderFromCart()
+      await makeOrderFromCart()
     }
     return {
       cartItems,

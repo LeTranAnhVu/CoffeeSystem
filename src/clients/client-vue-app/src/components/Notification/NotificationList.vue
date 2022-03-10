@@ -7,9 +7,9 @@
       <template v-if="notifications.length">
         <div class="notification-item" v-for="noti in notifications" :key="noti.id">
           <div class="content">
-            <span>{{noti.message}}</span>
-            <span class="time">{{formatFromNow(noti.sentAt)}}</span>
-            </div>
+            <span>{{ noti.message }}</span>
+            <span class="time">{{ formatFromNow(noti.sentAt) }}</span>
+          </div>
           <Divider/>
         </div>
       </template>
@@ -27,6 +27,7 @@ import Button from 'primevue/button'
 import useNotification from '@/composables/useNotification'
 import {useStore} from 'vuex'
 import moment from 'moment'
+
 export default {
   name: 'NotificationList',
   components: {
@@ -49,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.notification-item .content{
+.notification-item .content {
   display: flex;
   align-items: center;
   justify-content: space-between;

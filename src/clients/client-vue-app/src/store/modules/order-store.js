@@ -40,7 +40,7 @@ const order = {
     UPDATE_ORDER_STATUS(state, {id, statusCode, statusName}) {
       // Get order
       const idx = state.orders.findIndex(order => order.id === id)
-      if(idx === -1) return
+      if (idx === -1) return
 
       const updateOrder = state.orders[idx]
       updateOrder.statusCode = statusCode

@@ -13,7 +13,7 @@ export default function useAppToast() {
   // toast.add({severity:'info', summary: 'Info Message', detail:'Message Content', life: 1000});
 
   watch(comingToast, (newToast, oldToast) => {
-    if(!newToast) return
+    if (!newToast) return
 
     console.log('comingToast', newToast.summary)
     toast.add(newToast)

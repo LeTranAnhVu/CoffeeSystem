@@ -6,21 +6,21 @@ const wsOrder = {
   actions: {
     async joinOrderGroup(context) {
       // Get current user email
-      if(!context.getters.isUserLogin) {
-        console.warn("User is not login, cannot process join signalR group")
+      if (!context.getters.isUserLogin) {
+        console.warn('User is not login, cannot process join signalR group')
         return
       }
 
-      const {email} = context.getters.getUserInfo;
-      const groupName = 'orders.' + email;
-      await joinGroup(groupName);
+      const {email} = context.getters.getUserInfo
+      const groupName = 'orders.' + email
+      await joinGroup(groupName)
 
       await listenTo(methodContracts.ChangeOrderStatus, (changedOrderDto) => {
-        const {orderId, statusCode, statusName } = changedOrderDto
-        context.commit('UPDATE_ORDER_STATUS', {id: orderId, statusCode, statusName })
+        const {orderId, statusCode, statusName} = changedOrderDto
+        context.commit('UPDATE_ORDER_STATUS', {id: orderId, statusCode, statusName})
 
         // Ready
-        if(statusCode === OrderCodes.Ready){
+        if (statusCode === OrderCodes.Ready) {
           const notification = {message: `The Order #${orderId} is ready to pickup`}
           context.commit('UPSERT_NOTIFICATION', notification)
         }
@@ -29,13 +29,13 @@ const wsOrder = {
 
     async leaveOrderGroup(context) {
       // Get current user email
-      if(!context.getters.isUserLogin) {
-        console.warn("User is not login, cannot process join signalR group")
+      if (!context.getters.isUserLogin) {
+        console.warn('User is not login, cannot process join signalR group')
         return
       }
-      const {email} = context.getters.getUserInfo;
-      const groupName = 'orders.' + email;
-      await joinGroup(groupName);
+      const {email} = context.getters.getUserInfo
+      const groupName = 'orders.' + email
+      await joinGroup(groupName)
 
     }
   },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Toast position="bottom-right" />
+    <Toast position="bottom-right"/>
     <ConfirmDialog></ConfirmDialog>
     <Message v-if="wsTestMessage" severity="success">{{ wsTestMessage }}</Message>
     <Header/>
@@ -9,7 +9,7 @@
     </template>
     <template v-else>
       <h5>Loading ...</h5>
-      <ProgressBar mode="indeterminate" style="height: .5em" />
+      <ProgressBar mode="indeterminate" style="height: .5em"/>
     </template>
     <Footer/>
   </div>
@@ -51,7 +51,7 @@ export default {
     const wsTestMessage = computed(() => store.getters.getTestMessage)
 
     // toast
-    useAppToast();
+    useAppToast()
 
     return {
       wsTestMessage,
