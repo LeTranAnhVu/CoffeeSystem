@@ -42,14 +42,19 @@ public class OrderProductService : IOrderProductService
         return newOrder;
     }
 
-    public Task<IEnumerable<Order>> GetOrdersAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Order>> GetOrdersAsync(CancellationToken cancellationToken = default)
     {
-        return _orderRepo.GetAllAsync(cancellationToken);
+        return await _orderRepo.GetAllAsync(cancellationToken);
     }
 
-    public Task<Order?> GetOrderByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Order?> GetOrderByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return _orderRepo.GetByIdAsync(id, cancellationToken);
+        return await _orderRepo.GetByIdAsync(id, cancellationToken);
+    }
+    
+    public async Task<Order?> GetOrderByIdWithPriceAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _orderRepo.GetByIdWithPriceAsync(id, cancellationToken);
     }
 
     public async Task<Order> CancelOrderAsync(int id, CancellationToken cancellationToken = default)

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using AutoMapper;
 using Domain.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Dtos;
 using OrderService.Models;
@@ -40,17 +41,23 @@ namespace OrderService.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Order>> GetOrderById(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<Order>> GetOrderById(
+            int id,  
+            [FromQuery(Name = "withPrice")] bool withPrice = false, 
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                var product =  await _orderService.GetOrderByIdAsync(id, cancellationToken);
-                if (product is null)
+                var order =  withPrice 
+                    ? await _orderService.GetOrderByIdWithPriceAsync(id, cancellationToken) 
+                    : await _orderService.GetOrderByIdAsync(id, cancellationToken);
+                
+                if (order is null)
                 {
                     return NotFound(new NotFoundResult());
                 }
 
-                return Ok(product);
+                return Ok(order);
             }
             catch (Exception e)
             {
@@ -135,6 +142,10 @@ namespace OrderService.Controllers
                 new (){
                     Name = OrderStatus.Created,
                     Code = OrderStatusCode.Created
+                },
+                new (){
+                    Name = OrderStatus.Paid,
+                    Code = OrderStatusCode.Paid
                 },
                 new (){
                     Name = OrderStatus.Ordered,

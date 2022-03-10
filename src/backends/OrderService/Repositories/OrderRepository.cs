@@ -28,7 +28,7 @@ public class OrderRepository : IOrderRepository
             throw new ArgumentNullException($"Parameter {nameof(productIds)} should contains at least one products");
         }
         // Check Product
-        var products= await ValidateProducts(productIds);
+        await ValidateProductsAsync(productIds, cancellationToken);
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -54,9 +54,9 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-    private async Task<IReadOnlyList<Product>> ValidateProducts(IReadOnlyList<int> productIds)
+    private async Task<IReadOnlyList<Product>> ValidateProductsAsync(IReadOnlyList<int> productIds, CancellationToken cancellationToken)
     {
-        var products = await _productService.GetProductsByIds(productIds);
+        var products = await _productService.GetProductsByIds(productIds, cancellationToken);
         var set1 = new HashSet<int>(productIds);
         var set2 = new HashSet<int>(products.Select(p => p.Id));
         if (set1.SetEquals(set2))
@@ -76,6 +76,25 @@ public class OrderRepository : IOrderRepository
     {
         return await _context.Orders.Include("OrderedProducts")
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken: cancellationToken);
+    }
+    
+    public async Task<Order?> GetByIdWithPriceAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var order = await GetByIdAsync(id, cancellationToken);
+        if (order is null)
+        {
+            return null;
+        }
+        
+        // Include product price
+        var productIds = order.OrderedProducts.Select(p => p.ProductId).ToList();
+        var products = await ValidateProductsAsync(productIds, cancellationToken);
+        if (products.Any())
+        {
+            order.Products = products;
+        } 
+        
+        return order;
     }
 
     public async Task<Order> UpdateStatusOrderAsync(int id, OrderStatusCode statusCode,

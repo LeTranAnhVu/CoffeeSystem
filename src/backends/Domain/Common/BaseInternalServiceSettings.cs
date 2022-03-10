@@ -1,4 +1,4 @@
-namespace OrderService.Services;
+namespace Domain.Common;
 
 public abstract class BaseInternalServiceSettings
 {

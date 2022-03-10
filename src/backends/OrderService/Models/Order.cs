@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Constants;
+using OrderService.ExternalModels;
+
 namespace OrderService.Models;
 
 public class Order
@@ -13,6 +15,8 @@ public class Order
         {
             return StatusCode switch
             {
+                OrderStatusCode.Created => OrderStatus.Created,
+                OrderStatusCode.Paid => OrderStatus.Paid,
                 OrderStatusCode.Ordered => OrderStatus.Ordered,
                 OrderStatusCode.Preparing => OrderStatus.Preparing,
                 OrderStatusCode.Ready => OrderStatus.Ready,
@@ -23,4 +27,18 @@ public class Order
     public OrderStatusCode StatusCode { get; set; }
     public DateTime OrderedAt { get; set; }
     public virtual IReadOnlyList<OrderedProduct> OrderedProducts { get; set; }
+
+    public virtual IReadOnlyList<Product>? Products { get; set; }
+    public virtual double? TotalPrice {
+        get
+        {
+            if (Products is null )
+            {
+                return null;
+            }
+
+            var sum = Products.Select(p => p.Price).Sum();
+            return sum;
+        }
+    }
 }

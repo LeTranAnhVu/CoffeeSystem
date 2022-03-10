@@ -14,15 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-// #if DEBUG
-//     Console.WriteLine("---> Using Sqlite DB");
-//     options.UseSqlite("Filename=Order.db",
-//         options => { options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName); });
-//
-// #else
-    Console.WriteLine("---> Using MSSQL DB");
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PlatformsConn"));
-// #endif
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
 });
 
 builder.Services.AddAuthService(builder.Configuration);
