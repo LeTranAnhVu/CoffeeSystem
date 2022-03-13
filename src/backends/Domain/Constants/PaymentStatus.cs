@@ -1,22 +1,16 @@
 namespace Domain.Constants;
 
-public static class OrderStatus
+public static class PaymentStatus
 {
     public const string Unknown = "Unknown";
     public const string Created = "Created";
     public const string Paid = "Paid";
-    public const string Ordered = "Ordered";
-    public const string Preparing = "Preparing";
-    public const string Ready = "Ready";
     public const string Cancelled = "Cancelled";
 }
 
-public enum OrderStatusCode
+public enum PaymentStatusCode
 {
     Created = 1,
     Paid,
-    Ordered,
-    Preparing,
-    Ready,
     Cancelled
 }

@@ -20,7 +20,8 @@ public class Order
                 OrderStatusCode.Ordered => OrderStatus.Ordered,
                 OrderStatusCode.Preparing => OrderStatus.Preparing,
                 OrderStatusCode.Ready => OrderStatus.Ready,
-                _ => OrderStatus.Cancelled,
+                OrderStatusCode.Cancelled => OrderStatus.Cancelled,
+                _ => OrderStatus.Unknown,
             };
         }
     }

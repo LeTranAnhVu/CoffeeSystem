@@ -36,8 +36,8 @@ namespace OrderService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> Get(CancellationToken cancellationToken)
         {
-            var products =  await _orderService.GetOrdersAsync(cancellationToken);
-            return Ok(products);
+            var orders =  await _orderService.GetOrdersAsync(cancellationToken);
+            return Ok(orders);
         }
 
         [HttpGet("{id:int}")]

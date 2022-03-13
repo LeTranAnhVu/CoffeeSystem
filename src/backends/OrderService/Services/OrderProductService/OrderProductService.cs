@@ -1,5 +1,4 @@
 using Domain.Constants;
-using Microsoft.AspNetCore.Authorization;
 using OrderService.AsyncMessageDtos;
 using OrderService.Exceptions;
 using OrderService.Models;

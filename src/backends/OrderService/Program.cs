@@ -1,6 +1,7 @@
 using System.Reflection;
 using AuthForServicesExtension.AuthLogic;
 using Microsoft.EntityFrameworkCore;
+using OrderService.BackgroundServices;
 using OrderService.Models;
 using OrderService.Repositories;
 using OrderService.SeedData;
@@ -39,6 +40,8 @@ builder.Services.AddRabbitMqService(settingOptions =>
     settingOptions.HostName = config["HostName"];
     settingOptions.Port = Convert.ToInt32(config["Port"]);
 });
+
+builder.Services.AddHostedService<PaymentSubscriber>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

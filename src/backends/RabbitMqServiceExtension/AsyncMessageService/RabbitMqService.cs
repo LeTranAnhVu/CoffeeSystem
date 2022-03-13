@@ -98,40 +98,78 @@ public class RabbitMqService : IRabbitMqService, IDisposable
 
     public void ReceiveMessageOnTopic<T>(string topic, Action<T?> callback, string? queueName = null)
     {
-            if (_channel is null) throw new NullReferenceException();
+        if (_channel is null) throw new NullReferenceException();
 
-            if (string.IsNullOrWhiteSpace(queueName))
-            {
-                queueName = _channel.QueueDeclare().QueueName;
-            }
-            else
-            {
-                _channel.QueueDeclare(
-                    queue: queueName,
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-            }
-
-            _channel.QueueBind(queueName, _exchange, topic);
-            _logger.LogInformation("[*] Waiting for async messages.");
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var content = JsonSerializer.Deserialize<T>(message);
-                _logger.LogInformation($"[x] Received message from exchange:{_exchange}, topic:{topic}");
-                callback(content);
-                _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-            };
-
-            _channel.BasicConsume(
+        if (string.IsNullOrWhiteSpace(queueName))
+        {
+            queueName = _channel.QueueDeclare().QueueName;
+        }
+        else
+        {
+            _channel.QueueDeclare(
                 queue: queueName,
-                autoAck: false,
-                consumer: consumer);
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+        }
+
+        _channel.QueueBind(queueName, _exchange, topic);
+        _logger.LogInformation("[*] Waiting for async messages.");
+        var consumer = new EventingBasicConsumer(_channel);
+        consumer.Received += (model, ea) =>
+        {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            var content = JsonSerializer.Deserialize<T>(message);
+            _logger.LogInformation($"[x] Received message from exchange:{_exchange}, topic:{topic}");
+            callback(content);
+            _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+        };
+
+        _channel.BasicConsume(
+            queue: queueName,
+            autoAck: false,
+            consumer: consumer);
     }
+    
+    public void ReceiveMessageOnTopicWithCallbackAsync<T>(string topic, Func<T?, Task> callbackAsync, string? queueName = null)
+    {
+        if (_channel is null) throw new NullReferenceException();
+
+        if (string.IsNullOrWhiteSpace(queueName))
+        {
+            queueName = _channel.QueueDeclare().QueueName;
+        }
+        else
+        {
+            _channel.QueueDeclare(
+                queue: queueName,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+        }
+
+        _channel.QueueBind(queueName, _exchange, topic);
+        _logger.LogInformation("[*] Waiting for async messages.");
+        var consumer = new AsyncEventingBasicConsumer(_channel);
+        consumer.Received += async (model, ea) =>
+        {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            var content = JsonSerializer.Deserialize<T>(message);
+            _logger.LogInformation($"[x] Received message from exchange:{_exchange}, topic:{topic}");
+            await callbackAsync(content);
+            _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+        };
+
+        _channel.BasicConsume(
+            queue: queueName,
+            autoAck: false,
+            consumer: consumer);
+    }
+
 
     public void Dispose()
     {

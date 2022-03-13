@@ -1,32 +1,52 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PaymentService.Models;
 using PaymentService.Services.OrderService;
 using PaymentService.Services.PaymentService;
+using RabbitMqServiceExtension.AsyncMessageService;
 
 namespace PaymentService.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class PaymentController : ControllerBase
+public class PaymentsController : ControllerBase
 {
-    private readonly ILogger<PaymentController> _logger;
+    private readonly ILogger<PaymentsController> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPaymentService _paymentService;
     private readonly IOrderService _orderService;
+    private readonly IRabbitMqService _mqService;
 
-    public PaymentController(
-        ILogger<PaymentController> logger,
+    public PaymentsController(
+        ILogger<PaymentsController> logger,
         IHttpContextAccessor httpContextAccessor,
         IPaymentService paymentService,
-        IOrderService orderService
-    )
+        IOrderService orderService,
+        IRabbitMqService mqService)
     {
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
         _paymentService = paymentService;
         _orderService = orderService;
+        _mqService = mqService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Payment>>> GetAll(CancellationToken cancellationToken)
+    {
+        var payments = await _paymentService.GetAllAsync(cancellationToken);
+        _mqService.SendMessage("payment.paid", new {OrderId = 1, PaymentId = 0});
+        return Ok(payments);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<IEnumerable<Payment>>> GetOne(int id, CancellationToken cancellationToken)
+    {
+        var payment = await _paymentService.GetById(id, cancellationToken);
+
+        return payment is null ? NotFound() : Ok(payment);
     }
 
     [HttpGet("paymentPublicKey")]
@@ -63,7 +83,7 @@ public class PaymentController : ControllerBase
         }
 
         // Create the checkout session
-        var session = _paymentService.CreateCheckoutSession(order);
+        var session = await _paymentService.CreateCheckoutSessionAsync(order, cancellationToken);
         return Ok(new {CheckoutSessionId = session.SessionId});
     }
 
@@ -88,6 +108,8 @@ public class PaymentController : ControllerBase
         }
         catch (Exception e)
         {
+            _logger.LogError("Strip webhook fail");
+            _logger.LogError(e.Message);
             return BadRequest();
         }
     }
