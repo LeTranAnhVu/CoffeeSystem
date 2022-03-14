@@ -1,5 +1,5 @@
 import methodContracts from '@/websocket/methodContracts'
-import {joinGroup, listenTo} from '@/websocket/helpers/groupHelper'
+import {joinGroup, leaveGroup, listenTo} from '@/websocket/helpers/groupHelper'
 import {OrderCodes} from '@/constants'
 
 const wsOrder = {
@@ -12,8 +12,8 @@ const wsOrder = {
       }
 
       // const {email} = context.getters.getUserInfo;
-      const createGroup = 'orders.create'
-      await joinGroup(createGroup)
+      const orderGroup = 'orders.paid'
+      await joinGroup(orderGroup)
 
       await listenTo(methodContracts.CreateNewOrder, async (changedOrderDto) => {
         const {orderId} = changedOrderDto
@@ -40,15 +40,15 @@ const wsOrder = {
     async leaveOrderGroupAsEmployee(context) {
       // Get current user email
       if (!context.getters.isUserLogin) {
-        console.warn('User is not login, cannot process join signalR group')
+        console.warn('User is not login, cannot process leave signalR group')
         return
       }
       // const {email} = context.getters.getUserInfo;
-      const createGroup = 'orders.create'
-      await joinGroup(createGroup)
+      const orderGroup = 'orders.paid'
+      await leaveGroup(orderGroup)
 
       const cancelGroup = 'orders.cancel'
-      await joinGroup(cancelGroup)
+      await leaveGroup(cancelGroup)
 
     }
   },

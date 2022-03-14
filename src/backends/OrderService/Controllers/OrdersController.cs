@@ -104,7 +104,7 @@ namespace OrderService.Controllers
             }
         }
 
-        [HttpPatch("{id}/update-to-next-status")]
+        [HttpPatch("{id}/updateToNextStatus")]
         public async Task<ActionResult<Order>> UpdateToNextStatus(int id, CancellationToken cancellationToken)
         {
             try

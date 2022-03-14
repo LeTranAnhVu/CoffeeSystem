@@ -1,3 +1,4 @@
+using Domain.Constants;
 using Microsoft.AspNetCore.SignalR;
 using RabbitMqServiceExtension.AsyncMessageService;
 using SignalRService.Dtos;
@@ -74,6 +75,12 @@ public class OrderChangeSubscriber : BackgroundService
             {
                 _logger.LogInformation($"The order of {order.OrderedBy} with Id: {order.OrderId} is updated status to {order.StatusCode}");
 
+                if (order.StatusCode == OrderStatusCode.Paid)
+                {
+                    var group = "orders.paid";
+                    _hubContext.Clients.Group(group).ChangeOrderStatus(order); 
+                }
+                
                 var sendGroup = "orders." + order.OrderedBy;
                 _hubContext.Clients.Group(sendGroup).ChangeOrderStatus(order);
             });
