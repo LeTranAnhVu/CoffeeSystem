@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using PaymentService.Exceptions;
 using PaymentService.Models;
 using PaymentService.Repositories;
-using PaymentService.Services.OrderService;
 using RabbitMqServiceExtension.AsyncMessageService;
 using Stripe.Checkout;
 using ClientOrder = PaymentService.ExternalModels.Order;
@@ -92,11 +91,8 @@ namespace PaymentService.Services.PaymentService
                 PaymentIntentData = new SessionPaymentIntentDataOptions {Metadata = new Dictionary<string, string> {{"OrderId", order.Id.ToString()}}}
             };
 
-            var idempotencyKey = CreateIdempotencyKey(order);
-
             var service = new SessionService();
-            var session = await service.CreateAsync(options, new RequestOptions() {IdempotencyKey = idempotencyKey},
-                cancellationToken);
+            var session = await service.CreateAsync(options, null, cancellationToken);
 
             // Create new payment in database
             var payment = new Payment
@@ -134,11 +130,6 @@ namespace PaymentService.Services.PaymentService
                 },
                 Quantity = quantity,
             };
-        }
-
-        private string CreateIdempotencyKey(ClientOrder order)
-        {
-            return $"orderId_{order.Id}";
         }
 
         public async Task ParseWebhookEventAsync<T>(T parseOptions,
